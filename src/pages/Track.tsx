@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { getShipmentByTracking, Shipment } from '../services/shipmentService';
+import { getShipmentByTracking, Shipment, ShipmentHistory, ShipmentPackage } from '../services/shipmentService';
 import { geocodeAddress } from '../services/geocodingService';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -316,7 +316,7 @@ const Track: React.FC = () => {
             <h2 className={`text-xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-zip-blue-800'}`}>Shipment Progress</h2>
             <div className="relative">
               <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
-              {shipment.shipmentHistory?.map((history, index) => {
+              {shipment.shipmentHistory?.map((history: ShipmentHistory, index: number) => {
                 let statusColor;
                 let bgColor;
                 let StatusIcon;
@@ -425,7 +425,7 @@ const Track: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className={`text-sm uppercase tracking-wider ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Weight</div>
                   <div className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {shipment.packages.reduce((total, pkg) => total + pkg.weight, 0)} KG
+                    {shipment.packages.reduce((total: number, pkg: ShipmentPackage) => total + pkg.weight, 0)} KG
                   </div>
                 </div>
               </div>
@@ -531,7 +531,7 @@ const Track: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {shipment.packages.map((pkg, index) => (
+                  {shipment.packages.map((pkg: ShipmentPackage, index: number) => (
                     <tr key={index} className={`border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} ${index % 2 === 0 ? (isDarkMode ? 'bg-slate-700/50' : 'bg-gray-50') : ''}`}>
                       <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.quantity}</td>
                       <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.pieceType}</td>
