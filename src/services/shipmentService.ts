@@ -157,20 +157,7 @@ export const getShipmentByTracking = async (trackingNumber: string): Promise<Shi
   }
 };
 
-// Get shipment by ID - Note: Backend route for get by ID is same as tracking? 
-// No, the backend route `/:trackingNumber` searches by trackingNumber.
-// We don't have a specific `/:id` GET route in the backend snippet I saw!
-// The backend had `router.get('/:trackingNumber', ...)` finding by `trackingNumber`.
-// And `router.put('/:id')`.
-// So `getShipmentById` might fail if I use the same route or I need to add a route or filter on client side.
-// However, in `getAllShipments` we get everything.
-// For now, let's assume we can use `getAllShipments` and find by ID, OR implementation of `getShipmentById` needs to be checked.
-// Actually, I should probably add `GET /id/:id` to backend or similar if needed.
-// But mostly we need by tracking number for public tracking, and All for admin.
-// Admin might need by ID for editing.
-// Let's implement `getShipmentById` by filtering `getAllShipments` for now to be safe, or assume ID is passed as tracking number? No.
-// Let's update `getShipmentById` to fetch all and find, OR just return null if not critical. 
-// Actually, `AdministrationAndDevelopment.tsx` uses `getAllShipments` mostly. `updateShipment` uses ID.
+// Get shipment by ID
 export const getShipmentById = async (id: string): Promise<Shipment | null> => {
   try {
     const response = await fetch(`${API_URL}/shipments/id/${id}`);
@@ -242,28 +229,11 @@ export const updateTrackingInfo = async (
   currentLocation: string,
   remarks?: string
 ): Promise<Shipment> => {
-  // This essentially calls updateShipment with specific fields.
-  // The backend PUT /:id handles history update if status/location/remarks are present.
-  return updateShipment(id, { status: status as any, currentLocation, comments: remarks });
-  // Note: 'remarks' was mapped to 'comments' in backend? No, 'remarks' is in history.
-  // Backend `PUT /:id` expects `status`, `currentLocation`, `remarks` in body to update history.
-  // So we pass them.
-  try {
-    const response = await fetch(`${API_URL}/shipments/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ status, currentLocation, remarks }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update tracking info');
-    }
-    const item = await response.json();
-    return { ...item, id: item._id || item.id };
-  } catch (error) {
-    console.error('Update tracking info error:', error);
-    throw error;
-  }
-}; 
+  // Use the unified updateShipment function to pass tracking updates to the backend.
+  // The backend handles appending these to the shipment history if status/location/remarks are present.
+  return updateShipment(id, {
+    status: status as any,
+    currentLocation,
+    remarks
+  } as any);
+};
