@@ -6,6 +6,21 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        'zip-red': {
+          500: '#d92626', // Bright red for buttons/highlights
+          600: '#b91c1c', // Deep red for primary branding
+          700: '#991b1b', // Darker deep red for hover states
+          800: '#7f1d1d',
+          900: '#450a0a',
+        },
+        'zip-blue': {
+          500: '#3e54c1',
+          800: '#1e1b4b', // Deep blue
+          900: '#0f172a', // Very dark blue/slate
+          950: '#020617',
+        },
+      },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
@@ -33,4 +48,4 @@ module.exports = {
     },
   },
   plugins: [],
-} 
+}

@@ -33,11 +33,11 @@ const ShipmentMap: React.FC<ShipmentMapProps> = ({ shipment, isDarkMode }) => {
       }
 
       const results = await geocodeMultipleAddresses(addresses);
-      
+
       const locationMap = {
         origin: results[0] || null,
         destination: results[1] || null,
-        current: shipment.currentLocation && shipment.currentLocation !== shipment.origin 
+        current: shipment.currentLocation && shipment.currentLocation !== shipment.origin
           ? (results[2] || null)
           : null
       };
@@ -132,7 +132,7 @@ const ShipmentMap: React.FC<ShipmentMapProps> = ({ shipment, isDarkMode }) => {
       <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
         Shipment Route Map
       </h2>
-      
+
       <div className="relative">
         <LiveMap
           center={mapCenter}
@@ -160,7 +160,7 @@ const ShipmentMap: React.FC<ShipmentMapProps> = ({ shipment, isDarkMode }) => {
           completedRouteColor={isDarkMode ? '#10b981' : '#059669'}
           className="rounded-lg"
         />
-        
+
         <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
           <div className="text-center p-4">
             <FaMapMarkerAlt className="text-4xl text-gray-400 mx-auto mb-2" />
@@ -170,48 +170,47 @@ const ShipmentMap: React.FC<ShipmentMapProps> = ({ shipment, isDarkMode }) => {
           </div>
         </div>
       </div>
-      
+
       <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className={`p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gray-50 border-gray-200'}`}>
           <h3 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
             Origin
           </h3>
           <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            {geocodedLocations.origin?.formattedAddress || shipment.origin}
+            {shipment.originAddress || geocodedLocations.origin?.formattedAddress || shipment.origin}
           </p>
         </div>
-        
+
         {geocodedLocations.current && geocodedLocations.current !== geocodedLocations.origin && (
           <div className={`p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gray-50 border-gray-200'}`}>
             <h3 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
               Current Location
             </h3>
             <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              {geocodedLocations.current.formattedAddress}
+              {shipment.currentLocationAddress || geocodedLocations.current?.formattedAddress || shipment.currentLocation}
             </p>
           </div>
         )}
-        
+
         <div className={`p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gray-50 border-gray-200'}`}>
           <h3 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
             Destination
           </h3>
           <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            {geocodedLocations.destination?.formattedAddress || shipment.destination}
+            {shipment.destinationAddress || geocodedLocations.destination?.formattedAddress || shipment.destination}
           </p>
         </div>
       </div>
-      
+
       <div className="mt-4 text-center">
         <a
           href={`https://www.google.com/maps/dir/${encodeURIComponent(shipment.origin)}/${encodeURIComponent(shipment.destination)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-            isDarkMode
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${isDarkMode
               ? 'bg-purple-600 text-white hover:bg-blue-600'
               : 'bg-blue-600 text-white hover:bg-purple-600'
-          }`}
+            }`}
         >
           <FaMapMarkerAlt />
           <span>View Route in Google Maps</span>

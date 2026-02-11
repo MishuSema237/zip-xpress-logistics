@@ -129,7 +129,7 @@ const Admin: React.FC = () => {
     setLoading(true);
     setError('');
     setSuccess('');
-    
+
     try {
       const trackingData = {
         shipperName,
@@ -238,12 +238,12 @@ const Admin: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+              <h1 className="text-2xl font-bold text-zip-blue-800">Admin Dashboard</h1>
             </div>
             <div className="flex items-center">
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-zip-blue-600 hover:bg-zip-blue-700 focus:ring-zip-red-500"
               >
                 <FaSignOutAlt className="mr-2" size={16} />
                 Logout
@@ -258,7 +258,7 @@ const Admin: React.FC = () => {
         <div className="px-4 py-6 sm:px-0">
           <div className="bg-white shadow rounded-lg p-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-zip-blue-800">
                 {isEditing ? 'Edit Shipment' : 'Create New Shipment'}
               </h2>
             </div>
@@ -266,46 +266,46 @@ const Admin: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Shipper Information Section */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Shipper Information</h3>
+                <h3 className="text-lg font-medium text-zip-blue-800 mb-4">Shipper Information</h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Shipper Name</label>
-                      <input
-                        type="text"
-                        required
+                    <input
+                      type="text"
+                      required
                       value={shipperName}
                       onChange={(e) => setShipperName(e.target.value)}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-zip-red-500 focus:border-zip-red-500 sm:text-sm"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Shipper Address</label>
-                      <input
+                    <input
                       type="text"
-                        required
+                      required
                       value={shipperAddress}
                       onChange={(e) => setShipperAddress(e.target.value)}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-zip-red-500 focus:border-zip-red-500 sm:text-sm"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Shipper Phone</label>
-                      <input
+                    <input
                       type="tel"
-                        required
+                      required
                       value={shipperPhone}
                       onChange={(e) => setShipperPhone(e.target.value)}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-zip-red-500 focus:border-zip-red-500 sm:text-sm"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Shipper Email</label>
-                      <input
+                    <input
                       type="email"
-                        required
+                      required
                       value={shipperEmail}
                       onChange={(e) => setShipperEmail(e.target.value)}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-zip-red-500 focus:border-zip-red-500 sm:text-sm"
                     />
                   </div>
                 </div>
@@ -313,13 +313,13 @@ const Admin: React.FC = () => {
 
               {/* Receiver Information Section */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Receiver Information</h3>
+                <h3 className="text-lg font-medium text-zip-blue-800 mb-4">Receiver Information</h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Receiver Name</label>
-                      <input
-                        type="text"
-                        required
+                    <input
+                      type="text"
+                      required
                       value={receiverName}
                       onChange={(e) => setReceiverName(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -327,14 +327,14 @@ const Admin: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Receiver Address</label>
-                      <input
-                        type="text"
-                        required
+                    <input
+                      type="text"
+                      required
                       value={receiverAddress}
                       onChange={(e) => setReceiverAddress(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      />
-                    </div>
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Receiver Phone</label>
                     <input
@@ -347,26 +347,26 @@ const Admin: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Receiver Email</label>
-                      <input
+                    <input
                       type="email"
-                        required
+                      required
                       value={receiverEmail}
                       onChange={(e) => setReceiverEmail(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      />
+                    />
                   </div>
                 </div>
               </div>
 
               {/* Shipment Information Section */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Shipment Information</h3>
+                <h3 className="text-lg font-medium text-zip-blue-800 mb-4">Shipment Information</h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Origin</label>
-                      <input
-                        type="text"
-                        required
+                    <input
+                      type="text"
+                      required
                       value={origin}
                       onChange={(e) => setOrigin(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -374,9 +374,9 @@ const Admin: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Destination</label>
-                      <input
+                    <input
                       type="text"
-                        required
+                      required
                       value={destination}
                       onChange={(e) => setDestination(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -384,14 +384,14 @@ const Admin: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Carrier</label>
-                      <input
+                    <input
                       type="text"
-                        required
+                      required
                       value={carrier}
                       onChange={(e) => setCarrier(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      />
-                    </div>
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Type of Shipment</label>
                     <select
@@ -418,12 +418,12 @@ const Admin: React.FC = () => {
                       <option value="Sea Shipping">Sea Shipping</option>
                       <option value="Land Shipping">Land Shipping</option>
                     </select>
-                      </div>
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Product</label>
-                      <input
-                        type="text"
-                        required
+                    <input
+                      type="text"
+                      required
                       value={product}
                       onChange={(e) => setProduct(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -437,8 +437,8 @@ const Admin: React.FC = () => {
                       value={productQuantity}
                       onChange={(e) => setProductQuantity(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      />
-                    </div>
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Payment Mode</label>
                     <select
@@ -468,13 +468,13 @@ const Admin: React.FC = () => {
 
               {/* Schedule Section */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Schedule</h3>
+                <h3 className="text-lg font-medium text-zip-blue-800 mb-4">Schedule</h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Expected Delivery Date</label>
-                      <input
-                        type="date"
-                        required
+                    <input
+                      type="date"
+                      required
                       value={expectedDeliveryDate}
                       onChange={(e) => setExpectedDeliveryDate(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -482,11 +482,11 @@ const Admin: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Departure Time</label>
-                      <input
-                        type="time"
-                        required
-                        value={departureTime}
-                        onChange={(e) => setDepartureTime(e.target.value)}
+                    <input
+                      type="time"
+                      required
+                      value={departureTime}
+                      onChange={(e) => setDepartureTime(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
                   </div>
@@ -510,12 +510,12 @@ const Admin: React.FC = () => {
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
                   </div>
-                    </div>
-                  </div>
+                </div>
+              </div>
 
               {/* Package Details Section */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Package Details</h3>
+                <h3 className="text-lg font-medium text-zip-blue-800 mb-4">Package Details</h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Quantity</label>
@@ -540,17 +540,17 @@ const Admin: React.FC = () => {
                       <option value="Box">Box</option>
                       <option value="Pallet">Pallet</option>
                     </select>
-                      </div>
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Description</label>
-                      <input
-                        type="text"
-                        required
+                    <input
+                      type="text"
+                      required
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      />
-                    </div>
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Length (cm)</label>
                     <input
@@ -563,14 +563,14 @@ const Admin: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Width (cm)</label>
-                      <input
+                    <input
                       type="number"
-                        required
+                      required
                       value={width}
                       onChange={(e) => setWidth(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      />
-                    </div>
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Height (cm)</label>
                     <input
@@ -583,9 +583,9 @@ const Admin: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Weight (kg)</label>
-                      <input
+                    <input
                       type="number"
-                        required
+                      required
                       value={weight}
                       onChange={(e) => setWeight(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -596,7 +596,7 @@ const Admin: React.FC = () => {
 
               {/* Comments Section */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Comments</h3>
+                <h3 className="text-lg font-medium text-zip-blue-800 mb-4">Comments</h3>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Additional Comments</label>
                   <textarea
@@ -604,18 +604,18 @@ const Admin: React.FC = () => {
                     onChange={(e) => setComments(e.target.value)}
                     rows={3}
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      />
-                    </div>
-                  </div>
+                  />
+                </div>
+              </div>
 
               {/* Status Section */}
               <div className="border-b border-gray-200 pb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Status</h3>
+                <h3 className="text-lg font-medium text-zip-blue-800 mb-4">Status</h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Current Status</label>
                     <select
-                        required
+                      required
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -642,7 +642,7 @@ const Admin: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-zip-blue-600 hover:bg-zip-blue-700 focus:ring-zip-red-500"
                 >
                   {loading ? (
                     <>
@@ -667,7 +667,7 @@ const Admin: React.FC = () => {
             )}
 
             <div className="mt-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">All Trackings</h3>
+              <h3 className="text-lg font-medium text-zip-blue-800 mb-4">All Trackings</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -687,7 +687,7 @@ const Admin: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
                             onClick={() => handleEdit(tracking)}
-                            className="text-blue-600 hover:text-blue-900 mr-4"
+                            className="text-zip-red-600 hover:text-zip-red-900 mr-4"
                           >
                             <FaEdit className="h-5 w-5" size={16} />
                           </button>

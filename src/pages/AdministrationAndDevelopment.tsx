@@ -18,8 +18,9 @@ import {
   deleteUser,
   updateUserPermissions
 } from '../services/userService';
-import { sendShipperEmail, sendReceiverEmail } from '../services/emailService';
+import { sendTestEmails } from '../services/emailService';
 import { FaPlus, FaEdit, FaTrash, FaMapMarkerAlt, FaSearch, FaFilter, FaSync, FaSpinner, FaEnvelope, FaChartLine, FaUsers, FaCog, FaShieldAlt } from 'react-icons/fa';
+import { geocodeAddress } from '../services/geocodingService';
 import Icon from '../components/icons/Icon';
 import AnimatedCard from '../components/animations/AnimatedCard';
 import { toast } from 'react-toastify';
@@ -30,13 +31,13 @@ type ShipmentFormData = {
   shipperAddress: string;
   shipperPhone: string;
   shipperEmail: string;
-  
+
   // Receiver Information
   receiverName: string;
   receiverAddress: string;
   receiverPhone: string;
   receiverEmail: string;
-  
+
   // Shipment Information
   origin: string;
   destination: string;
@@ -49,13 +50,13 @@ type ShipmentFormData = {
   paymentMode: string;
   totalFreight: number;
   weight: number;
-  
+
   // Dates and Times
   expectedDeliveryDate: string;
   departureTime: string;
   pickupDate: string;
   pickupTime: string;
-  
+
   // Package Details
   packages: Array<{
     quantity: number;
@@ -66,7 +67,7 @@ type ShipmentFormData = {
     height: number;
     weight: number;
   }>;
-  
+
   // Status and Comments
   status: 'pending' | 'in_transit' | 'delivered' | 'delayed' | 'on_hold';
   comments: string;
@@ -166,7 +167,7 @@ const AdministrationAndDevelopment: React.FC = () => {
       const shipmentsData = await getAllShipments();
       setShipments(shipmentsData);
       if (shipmentsData.length > 0) {
-      toast.success('Data loaded successfully');
+        toast.success('Data loaded successfully');
       }
     } catch (error) {
       toast.error('Failed to load data');
@@ -195,16 +196,16 @@ const AdministrationAndDevelopment: React.FC = () => {
         id: 'test-id',
         trackingNumber: 'TEST' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0'),
         shipperName: 'Test Shipper',
-        shipperEmail: 'mishaelsema@gmail.com',
+        shipperEmail: 'admin@zipxpress.com',
         shipperAddress: '123 Shipper St, Test City',
         shipperPhone: '+1 234-567-8900',
         receiverName: 'Test Receiver',
-        receiverEmail: 'mishaelsema@gmail.com',
+        receiverEmail: 'client@example.com',
         receiverAddress: '456 Receiver Ave, Test Town',
         receiverPhone: '+1 987-654-3210',
         origin: 'Test Origin City',
         destination: 'Test Destination City',
-        carrier: 'Global Track Express',
+        carrier: 'Zip Xpress Logistics',
         typeOfShipment: 'Express',
         shipmentMode: 'Air Shipping',
         packageCount: 2,
@@ -257,11 +258,8 @@ const AdministrationAndDevelopment: React.FC = () => {
         updatedAt: new Date().toISOString()
       };
 
-      await Promise.all([
-        sendShipperEmail(testShipment),
-        sendReceiverEmail(testShipment)
-      ]);
-      
+      await sendTestEmails(testShipment);
+
       toast.success('Test emails sent successfully!');
     } catch (error) {
       console.error('Email test failed:', error);
@@ -273,18 +271,25 @@ const AdministrationAndDevelopment: React.FC = () => {
   const handleCreateShipment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isCreating) return;
-    
+
     try {
       setIsCreating(true);
+
+      // Resolve coordinates to friendly addresses
+      const [originGeocoded, destinationGeocoded] = await Promise.all([
+        geocodeAddress(shipmentFormData.origin),
+        geocodeAddress(shipmentFormData.destination)
+      ]);
+
       // Calculate totals
       const totalVolumetricWeight = shipmentFormData.packages.reduce((acc, pkg) => {
         return acc + (pkg.length * pkg.width * pkg.height * pkg.quantity) / 5000;
       }, 0);
-      
+
       const totalVolume = shipmentFormData.packages.reduce((acc, pkg) => {
         return acc + (pkg.length * pkg.width * pkg.height * pkg.quantity) / 1000000;
       }, 0);
-      
+
       const totalActualWeight = shipmentFormData.packages.reduce((acc, pkg) => {
         return acc + (pkg.weight * pkg.quantity);
       }, 0);
@@ -292,13 +297,16 @@ const AdministrationAndDevelopment: React.FC = () => {
       const shipmentData = {
         ...shipmentFormData,
         currentLocation: shipmentFormData.origin,
+        currentLocationAddress: originGeocoded.formattedAddress,
+        originAddress: originGeocoded.formattedAddress,
+        destinationAddress: destinationGeocoded.formattedAddress,
         totalVolumetricWeight,
         totalVolume,
         totalActualWeight,
         shipmentHistory: [{
           date: new Date().toISOString().split('T')[0],
           time: new Date().toLocaleTimeString(),
-          location: shipmentFormData.origin,
+          location: originGeocoded.formattedAddress,
           status: shipmentFormData.status,
           updatedBy: 'admin',
           remarks: 'Shipment created'
@@ -323,22 +331,24 @@ const AdministrationAndDevelopment: React.FC = () => {
 
     try {
       setIsUpdating(true);
-      
-      // If status or location has changed, update tracking info
-      if (
-        (trackingFormData.status && trackingFormData.status !== selectedShipment.status) ||
-        (trackingFormData.currentLocation && trackingFormData.currentLocation !== selectedShipment.currentLocation)
-      ) {
-        await updateTrackingInfo(
-          selectedShipment.id,
-          trackingFormData.status || selectedShipment.status,
-          trackingFormData.currentLocation || selectedShipment.currentLocation
-        );
+
+      // If status or location has changed, handle geocoding and history update components
+      const updateData: any = { ...trackingFormData };
+
+      if (trackingFormData.currentLocation && trackingFormData.currentLocation !== selectedShipment.currentLocation) {
+        const geocoded = await geocodeAddress(trackingFormData.currentLocation);
+        updateData.currentLocationAddress = geocoded.formattedAddress;
       }
 
-      // Update other shipment details
-      await updateShipment(selectedShipment.id, trackingFormData);
-      
+      // Map comments to remarks for the backend history logic
+      if (trackingFormData.comments) {
+        updateData.remarks = trackingFormData.comments;
+      }
+
+      // Consolidate updates into a single call to updateShipment.
+      // The backend logic usually triggers history update on specific fields.
+      await updateShipment(selectedShipment.id, updateData);
+
       setShowTrackingForm(false);
       loadData();
       toast.success('Shipment updated successfully');
@@ -381,18 +391,18 @@ const AdministrationAndDevelopment: React.FC = () => {
   const filteredShipments = shipments.filter((shipment) =>
     searchTerm
       ? shipment.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        shipment.shipperName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        shipment.receiverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        shipment.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        shipment.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        shipment.status.toLowerCase().includes(searchTerm.toLowerCase())
+      shipment.shipperName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      shipment.receiverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      shipment.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      shipment.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      shipment.status.toLowerCase().includes(searchTerm.toLowerCase())
       : true
   );
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section */}
-      <div className="relative bg-[#351c15] dark:bg-gray-800 py-16">
+      <div className="relative bg-zip-blue-900 dark:bg-gray-800 py-16">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
@@ -416,7 +426,7 @@ const AdministrationAndDevelopment: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <AnimatedCard animation="slide" delay="0ms">
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="text-[#351c15] dark:text-[#ffbe03] mb-4">
+              <div className="text-zip-red-600 dark:text-zip-red-500 mb-4">
                 <Icon icon={FaEnvelope} size={32} />
               </div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white">Email Service</h3>
@@ -425,7 +435,7 @@ const AdministrationAndDevelopment: React.FC = () => {
               </p>
               <button
                 onClick={handleTestEmail}
-                className="mt-4 px-4 py-2 bg-[#351c15] dark:bg-[#ffbe03] text-white dark:text-gray-900 rounded-md hover:bg-[#4a2a1f] dark:hover:bg-[#e6a902]"
+                className="mt-4 px-4 py-2 bg-zip-red-600 dark:bg-zip-red-600 text-white dark:text-gray-900 rounded-md hover:bg-zip-blue-800 dark:hover:bg-zip-red-700"
               >
                 Test Email Service
               </button>
@@ -434,7 +444,7 @@ const AdministrationAndDevelopment: React.FC = () => {
 
           <AnimatedCard animation="slide" delay="200ms">
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="text-[#351c15] dark:text-[#ffbe03] mb-4">
+              <div className="text-zip-red-600 dark:text-zip-red-500 mb-4">
                 <Icon icon={FaShieldAlt} size={32} />
               </div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white">System Status</h3>
@@ -443,7 +453,7 @@ const AdministrationAndDevelopment: React.FC = () => {
               </p>
               <button
                 onClick={handleLogout}
-                className="mt-4 px-4 py-2 bg-[#351c15] dark:bg-[#ffbe03] text-white dark:text-gray-900 rounded-md hover:bg-[#4a2a1f] dark:hover:bg-[#e6a902]"
+                className="mt-4 px-4 py-2 bg-zip-red-600 dark:bg-zip-red-600 text-white dark:text-gray-900 rounded-md hover:bg-zip-blue-800 dark:hover:bg-zip-red-700"
               >
                 Logout
               </button>
@@ -459,21 +469,19 @@ const AdministrationAndDevelopment: React.FC = () => {
               placeholder="Search shipments..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`w-full px-4 py-2 rounded-md border ${
-                isDarkMode 
-                  ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400' 
-                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-              } focus:outline-none focus:ring-2 focus:ring-[#ffbe03] dark:focus:ring-[#ffbe03]`}
+              className={`w-full px-4 py-2 rounded-md border ${isDarkMode
+                ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400'
+                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                } focus:outline-none focus:ring-2 focus:ring-zip-red-500 dark:focus:ring-zip-red-500`}
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value as any)}
-            className={`px-4 py-2 rounded-md border ${
-              isDarkMode 
-                ? 'bg-gray-800 border-gray-700 text-gray-100' 
-                : 'bg-white border-gray-300 text-gray-900'
-            } focus:outline-none focus:ring-2 focus:ring-[#ffbe03] dark:focus:ring-[#ffbe03]`}
+            className={`px-4 py-2 rounded-md border ${isDarkMode
+              ? 'bg-gray-800 border-gray-700 text-gray-100'
+              : 'bg-white border-gray-300 text-gray-900'
+              } focus:outline-none focus:ring-2 focus:ring-zip-red-500 dark:focus:ring-zip-red-500`}
           >
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
@@ -485,11 +493,10 @@ const AdministrationAndDevelopment: React.FC = () => {
           <button
             onClick={loadData}
             disabled={loading}
-            className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium ${
-              isDarkMode 
-                ? 'text-gray-900 bg-[#ffbe03] hover:bg-[#e6a902] disabled:bg-gray-600' 
-                : 'text-white bg-[#351c15] hover:bg-[#4a2a1f] disabled:bg-gray-400'
-            }`}
+            className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium ${isDarkMode
+              ? 'text-gray-900 bg-zip-red-600 hover:bg-zip-red-700 disabled:bg-gray-600'
+              : 'text-white bg-zip-blue-900 hover:bg-zip-blue-800 disabled:bg-gray-400'
+              }`}
           >
             {loading ? (
               <FaSpinner className="animate-spin mr-2" />
@@ -503,14 +510,13 @@ const AdministrationAndDevelopment: React.FC = () => {
         {/* Shipments Table */}
         <div className="mt-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-[#ffbe03]' : 'text-[#351c15]'}`}>Shipments</h2>
+            <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-zip-red-500' : 'text-zip-blue-800'}`}>Shipments</h2>
             <button
               onClick={() => setShowShipmentForm(true)}
-              className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium ${
-                isDarkMode 
-                  ? 'text-gray-900 bg-[#ffbe03] hover:bg-[#e6a902]' 
-                  : 'text-white bg-[#351c15] hover:bg-[#4a2a1f]'
-              }`}
+              className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium ${isDarkMode
+                ? 'text-gray-900 bg-zip-red-600 hover:bg-zip-red-700'
+                : 'text-white bg-zip-blue-900 hover:bg-zip-blue-800'
+                }`}
             >
               <FaPlus className="mr-2" />
               New Shipment
@@ -521,39 +527,32 @@ const AdministrationAndDevelopment: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <tr>
-                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
                     Tracking Number
                   </th>
-                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
                     Status
                   </th>
-                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
                     Origin
                   </th>
-                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
                     Destination
                   </th>
-                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
                     Expected Delivery
                   </th>
-                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
                     Payment Mode
                   </th>
-                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
                     Actions
                   </th>
                 </tr>
@@ -563,11 +562,11 @@ const AdministrationAndDevelopment: React.FC = () => {
                   .filter((shipment) =>
                     searchTerm
                       ? shipment.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        shipment.shipperName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        shipment.receiverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        shipment.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        shipment.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        shipment.status.toLowerCase().includes(searchTerm.toLowerCase())
+                      shipment.shipperName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      shipment.receiverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      shipment.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      shipment.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      shipment.status.toLowerCase().includes(searchTerm.toLowerCase())
                       : true
                   )
                   .map((shipment) => (
@@ -576,13 +575,12 @@ const AdministrationAndDevelopment: React.FC = () => {
                         {shipment.trackingNumber}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          shipment.status === 'delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${shipment.status === 'delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
                           shipment.status === 'in_transit' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                          shipment.status === 'delayed' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
-                          shipment.status === 'on_hold' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                          'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
-                        }`}>
+                            shipment.status === 'delayed' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
+                              shipment.status === 'on_hold' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
+                          }`}>
                           {shipment.status.replace('_', ' ').toUpperCase()}
                         </span>
                       </td>
@@ -604,13 +602,13 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setSelectedShipment(shipment);
                             setShowTrackingForm(true);
                           }}
-                          className={`text-[#351c15] dark:text-[#ffbe03] hover:text-[#4a2a1f] dark:hover:text-[#e6a902] mr-3`}
+                          className={`text-zip-red-600 dark:text-zip-red-500 hover:text-zip-red-600 dark:hover:text-french-blue-500 mr-3`}
                         >
                           <FaMapMarkerAlt />
                         </button>
                         <button
                           onClick={() => handleDeleteShipment(shipment.id)}
-                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                          className="text-zip-red-600 hover:underline"
                         >
                           <FaTrash />
                         </button>
@@ -625,242 +623,242 @@ const AdministrationAndDevelopment: React.FC = () => {
 
       {/* Shipment Form Modal */}
       {showShipmentForm && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-lg w-full max-w-4xl my-8">
             <div className="p-6 border-b">
               <h2 className="text-2xl font-bold">Create New Shipment</h2>
             </div>
             <div className="p-6 max-h-[calc(90vh-8rem)] overflow-y-auto">
               <form onSubmit={handleCreateShipment} className="space-y-6">
-            {/* Shipper Information */}
+                {/* Shipper Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+                  <div>
                     <h3 className="text-lg font-medium mb-2">Shipper Information</h3>
                     <div className="space-y-2">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Shipper Name</label>
-                    <input
-                      type="text"
+                        <input
+                          type="text"
                           placeholder="Enter shipper's full name"
-                      value={shipmentFormData.shipperName}
-                      onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipperName: e.target.value })}
+                          value={shipmentFormData.shipperName}
+                          onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipperName: e.target.value })}
                           className="w-full px-3 py-2 border rounded-md"
                           title="Enter the full name of the person or company sending the shipment"
-                      required
-                    />
-                  </div>
+                          required
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Shipper Address</label>
-                    <input
-                      type="text"
+                        <input
+                          type="text"
                           placeholder="Enter complete shipping address"
-                      value={shipmentFormData.shipperAddress}
-                      onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipperAddress: e.target.value })}
+                          value={shipmentFormData.shipperAddress}
+                          onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipperAddress: e.target.value })}
                           className="w-full px-3 py-2 border rounded-md"
                           title="Enter the complete address where the shipment will be picked up"
-                      required
-                    />
-                  </div>
+                          required
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Shipper Phone</label>
-                    <input
-                      type="tel"
+                        <input
+                          type="tel"
                           placeholder="Enter contact phone number"
-                      value={shipmentFormData.shipperPhone}
-                      onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipperPhone: e.target.value })}
+                          value={shipmentFormData.shipperPhone}
+                          onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipperPhone: e.target.value })}
                           className="w-full px-3 py-2 border rounded-md"
                           title="Enter a valid phone number for the shipper"
-                      required
-                    />
-                  </div>
+                          required
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Shipper Email</label>
-                    <input
-                      type="email"
+                        <input
+                          type="email"
                           placeholder="Enter email address"
-                      value={shipmentFormData.shipperEmail}
-                      onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipperEmail: e.target.value })}
+                          value={shipmentFormData.shipperEmail}
+                          onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipperEmail: e.target.value })}
                           className="w-full px-3 py-2 border rounded-md"
                           title="Enter a valid email address for shipment notifications"
-                      required
-                    />
+                          required
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
 
-              <div>
+                  <div>
                     <h3 className="text-lg font-medium mb-2">Receiver Information</h3>
                     <div className="space-y-2">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Receiver Name</label>
-                    <input
-                      type="text"
+                        <input
+                          type="text"
                           placeholder="Enter receiver's full name"
-                      value={shipmentFormData.receiverName}
-                      onChange={(e) => setShipmentFormData({ ...shipmentFormData, receiverName: e.target.value })}
+                          value={shipmentFormData.receiverName}
+                          onChange={(e) => setShipmentFormData({ ...shipmentFormData, receiverName: e.target.value })}
                           className="w-full px-3 py-2 border rounded-md"
                           title="Enter the full name of the person or company receiving the shipment"
-                      required
-                    />
-                  </div>
+                          required
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Receiver Address</label>
-                    <input
-                      type="text"
+                        <input
+                          type="text"
                           placeholder="Enter complete delivery address"
-                      value={shipmentFormData.receiverAddress}
-                      onChange={(e) => setShipmentFormData({ ...shipmentFormData, receiverAddress: e.target.value })}
+                          value={shipmentFormData.receiverAddress}
+                          onChange={(e) => setShipmentFormData({ ...shipmentFormData, receiverAddress: e.target.value })}
                           className="w-full px-3 py-2 border rounded-md"
                           title="Enter the complete address where the shipment will be delivered"
-                      required
-                    />
-                  </div>
+                          required
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Receiver Phone</label>
-                    <input
-                      type="tel"
+                        <input
+                          type="tel"
                           placeholder="Enter contact phone number"
-                      value={shipmentFormData.receiverPhone}
-                      onChange={(e) => setShipmentFormData({ ...shipmentFormData, receiverPhone: e.target.value })}
+                          value={shipmentFormData.receiverPhone}
+                          onChange={(e) => setShipmentFormData({ ...shipmentFormData, receiverPhone: e.target.value })}
                           className="w-full px-3 py-2 border rounded-md"
                           title="Enter a valid phone number for the receiver"
-                      required
-                    />
-                  </div>
+                          required
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Receiver Email</label>
-                    <input
-                      type="email"
+                        <input
+                          type="email"
                           placeholder="Enter email address"
-                      value={shipmentFormData.receiverEmail}
-                      onChange={(e) => setShipmentFormData({ ...shipmentFormData, receiverEmail: e.target.value })}
+                          value={shipmentFormData.receiverEmail}
+                          onChange={(e) => setShipmentFormData({ ...shipmentFormData, receiverEmail: e.target.value })}
                           className="w-full px-3 py-2 border rounded-md"
                           title="Enter a valid email address for delivery notifications"
-                      required
-                    />
+                          required
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Shipment Information */}
-            <div>
+                {/* Shipment Information */}
+                <div>
                   <h3 className="text-lg font-medium mb-2">Shipment Information</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Origin</label>
-                  <input
-                    type="text"
-                    placeholder="Enter origin location"
-                    value={shipmentFormData.origin}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, origin: e.target.value })}
+                      <input
+                        type="text"
+                        placeholder="Enter origin location"
+                        value={shipmentFormData.origin}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, origin: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Enter the city or location where the shipment originates"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Destination</label>
-                  <input
-                    type="text"
-                    placeholder="Enter destination location"
-                    value={shipmentFormData.destination}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, destination: e.target.value })}
+                      <input
+                        type="text"
+                        placeholder="Enter destination location"
+                        value={shipmentFormData.destination}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, destination: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Enter the city or location where the shipment will be delivered"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Carrier</label>
                       <input
                         type="text"
                         placeholder="Enter carrier name"
-                    value={shipmentFormData.carrier}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, carrier: e.target.value })}
+                        value={shipmentFormData.carrier}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, carrier: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Enter the name of the shipping carrier or company"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Type of Shipment</label>
-                  <select
-                    value={shipmentFormData.typeOfShipment}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, typeOfShipment: e.target.value })}
+                      <select
+                        value={shipmentFormData.typeOfShipment}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, typeOfShipment: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Select the type of shipping service"
-                    required
-                  >
+                        required
+                      >
                         <option value="">Select Type</option>
                         <option value="standard">Standard</option>
                         <option value="express">Express</option>
                         <option value="economy">Economy</option>
-                  </select>
-                </div>
+                      </select>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Shipment Mode</label>
-                  <select
-                    value={shipmentFormData.shipmentMode}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipmentMode: e.target.value })}
+                      <select
+                        value={shipmentFormData.shipmentMode}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, shipmentMode: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Select the mode of transportation"
-                    required
-                  >
+                        required
+                      >
                         <option value="">Select Mode</option>
-                    <option value="land_shipping">Land Shipping</option>
-                    <option value="air_shipping">Air Shipping</option>
-                    <option value="sea_shipping">Sea Shipping</option>
-                  </select>
-                </div>
+                        <option value="land_shipping">Land Shipping</option>
+                        <option value="air_shipping">Air Shipping</option>
+                        <option value="sea_shipping">Sea Shipping</option>
+                      </select>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Product</label>
-                  <input
-                    type="text"
-                    placeholder="Enter product name"
-                    value={shipmentFormData.product}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, product: e.target.value })}
+                      <input
+                        type="text"
+                        placeholder="Enter product name"
+                        value={shipmentFormData.product}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, product: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Enter the name or description of the product being shipped"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Product Quantity</label>
-                  <input
-                    type="number"
-                    placeholder="Enter quantity"
-                    value={shipmentFormData.productQuantity}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, productQuantity: parseInt(e.target.value) })}
+                      <input
+                        type="number"
+                        placeholder="Enter quantity"
+                        value={shipmentFormData.productQuantity}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, productQuantity: parseInt(e.target.value) })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Enter the total quantity of products being shipped"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Total Freight</label>
-                  <input
+                      <input
                         type="number"
                         placeholder="Enter total freight cost"
                         value={shipmentFormData.totalFreight}
                         onChange={(e) => setShipmentFormData({ ...shipmentFormData, totalFreight: parseFloat(e.target.value) })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Enter the total shipping cost"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Weight</label>
-                  <input
-                    type="number"
+                      <input
+                        type="number"
                         placeholder="Enter total weight"
                         value={shipmentFormData.weight}
                         onChange={(e) => setShipmentFormData({ ...shipmentFormData, weight: parseFloat(e.target.value) })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Enter the total weight of the shipment in kilograms"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Payment Mode</label>
                       <input
@@ -879,100 +877,100 @@ const AdministrationAndDevelopment: React.FC = () => {
                         required
                       />
                     </div>
-              </div>
-            </div>
+                  </div>
+                </div>
 
-            {/* Dates and Times */}
-            <div>
+                {/* Dates and Times */}
+                <div>
                   <h3 className="text-lg font-medium mb-2">Dates and Times</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Expected Delivery Date</label>
-                  <input
-                    type="date"
+                      <input
+                        type="date"
                         placeholder="Select expected delivery date"
-                    value={shipmentFormData.expectedDeliveryDate}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, expectedDeliveryDate: e.target.value })}
+                        value={shipmentFormData.expectedDeliveryDate}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, expectedDeliveryDate: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Select the expected date of delivery"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Departure Time</label>
-                  <input
-                    type="time"
+                      <input
+                        type="time"
                         placeholder="Select departure time"
-                    value={shipmentFormData.departureTime}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, departureTime: e.target.value })}
+                        value={shipmentFormData.departureTime}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, departureTime: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Select the scheduled departure time"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
-                  <input
-                    type="date"
+                      <input
+                        type="date"
                         placeholder="Select pickup date"
-                    value={shipmentFormData.pickupDate}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, pickupDate: e.target.value })}
+                        value={shipmentFormData.pickupDate}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, pickupDate: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Select the date when the shipment will be picked up"
-                    required
-                  />
-                </div>
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Time</label>
-                  <input
-                    type="time"
+                      <input
+                        type="time"
                         placeholder="Select pickup time"
-                    value={shipmentFormData.pickupTime}
-                    onChange={(e) => setShipmentFormData({ ...shipmentFormData, pickupTime: e.target.value })}
+                        value={shipmentFormData.pickupTime}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, pickupTime: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Select the scheduled pickup time"
-                    required
-                  />
+                        required
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Package Details */}
-            <div>
+                {/* Package Details */}
+                <div>
                   <h3 className="text-lg font-medium mb-2">Package Details</h3>
-              {shipmentFormData.packages.map((pkg, index) => (
+                  {shipmentFormData.packages.map((pkg, index) => (
                     <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 p-4 border rounded-md">
-                  <div>
+                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-                    <input
-                      type="number"
-                      placeholder="Quantity"
-                      value={pkg.quantity}
-                      onChange={(e) => {
-                        const newPackages = [...shipmentFormData.packages];
-                        newPackages[index].quantity = parseInt(e.target.value);
-                        setShipmentFormData({ ...shipmentFormData, packages: newPackages });
-                      }}
+                        <input
+                          type="number"
+                          placeholder="Quantity"
+                          value={pkg.quantity}
+                          onChange={(e) => {
+                            const newPackages = [...shipmentFormData.packages];
+                            newPackages[index].quantity = parseInt(e.target.value);
+                            setShipmentFormData({ ...shipmentFormData, packages: newPackages });
+                          }}
                           className="w-full px-3 py-2 border rounded-md"
-                      required
-                    />
-                  </div>
-                  <div>
+                          required
+                        />
+                      </div>
+                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Piece Type</label>
-                    <input
-                      type="text"
-                      placeholder="Piece Type"
-                      value={pkg.pieceType}
-                      onChange={(e) => {
-                        const newPackages = [...shipmentFormData.packages];
-                        newPackages[index].pieceType = e.target.value;
-                        setShipmentFormData({ ...shipmentFormData, packages: newPackages });
-                      }}
+                        <input
+                          type="text"
+                          placeholder="Piece Type"
+                          value={pkg.pieceType}
+                          onChange={(e) => {
+                            const newPackages = [...shipmentFormData.packages];
+                            newPackages[index].pieceType = e.target.value;
+                            setShipmentFormData({ ...shipmentFormData, packages: newPackages });
+                          }}
                           className="w-full px-3 py-2 border rounded-md"
-                      required
-                    />
-                  </div>
-                  <div>
+                          required
+                        />
+                      </div>
+                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
                         <input
                           type="number"
@@ -1003,75 +1001,75 @@ const AdministrationAndDevelopment: React.FC = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Length (cm)</label>
-                    <input
-                      type="number"
+                        <input
+                          type="number"
                           placeholder="Length (cm)"
-                      value={pkg.length}
-                      onChange={(e) => {
-                        const newPackages = [...shipmentFormData.packages];
-                        newPackages[index].length = parseFloat(e.target.value);
-                        setShipmentFormData({ ...shipmentFormData, packages: newPackages });
-                      }}
+                          value={pkg.length}
+                          onChange={(e) => {
+                            const newPackages = [...shipmentFormData.packages];
+                            newPackages[index].length = parseFloat(e.target.value);
+                            setShipmentFormData({ ...shipmentFormData, packages: newPackages });
+                          }}
                           className="w-full px-3 py-2 border rounded-md"
-                      required
-                    />
-                  </div>
-                  <div>
+                          required
+                        />
+                      </div>
+                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Width (cm)</label>
-                    <input
-                      type="number"
+                        <input
+                          type="number"
                           placeholder="Width (cm)"
-                      value={pkg.width}
-                      onChange={(e) => {
-                        const newPackages = [...shipmentFormData.packages];
-                        newPackages[index].width = parseFloat(e.target.value);
-                        setShipmentFormData({ ...shipmentFormData, packages: newPackages });
-                      }}
+                          value={pkg.width}
+                          onChange={(e) => {
+                            const newPackages = [...shipmentFormData.packages];
+                            newPackages[index].width = parseFloat(e.target.value);
+                            setShipmentFormData({ ...shipmentFormData, packages: newPackages });
+                          }}
                           className="w-full px-3 py-2 border rounded-md"
-                      required
-                    />
-                  </div>
-                  <div>
+                          required
+                        />
+                      </div>
+                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
-                    <input
-                      type="number"
+                        <input
+                          type="number"
                           placeholder="Height (cm)"
-                      value={pkg.height}
-                      onChange={(e) => {
-                        const newPackages = [...shipmentFormData.packages];
-                        newPackages[index].height = parseFloat(e.target.value);
-                        setShipmentFormData({ ...shipmentFormData, packages: newPackages });
-                      }}
+                          value={pkg.height}
+                          onChange={(e) => {
+                            const newPackages = [...shipmentFormData.packages];
+                            newPackages[index].height = parseFloat(e.target.value);
+                            setShipmentFormData({ ...shipmentFormData, packages: newPackages });
+                          }}
                           className="w-full px-3 py-2 border rounded-md"
-                      required
-                    />
-                  </div>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => {
-                  setShipmentFormData({
-                    ...shipmentFormData,
-                    packages: [
-                      ...shipmentFormData.packages,
-                      {
-                        quantity: 1,
+                          required
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShipmentFormData({
+                        ...shipmentFormData,
+                        packages: [
+                          ...shipmentFormData.packages,
+                          {
+                            quantity: 1,
                             pieceType: '',
-                        description: '',
-                        length: 0,
-                        width: 0,
-                        height: 0,
-                        weight: 0
-                      }
-                    ]
-                  });
-                }}
+                            description: '',
+                            length: 0,
+                            width: 0,
+                            height: 0,
+                            weight: 0
+                          }
+                        ]
+                      });
+                    }}
                     className="mt-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-              >
-                Add Package
-              </button>
-            </div>
+                  >
+                    Add Package
+                  </button>
+                </div>
 
                 <div className="mt-4 flex justify-end space-x-3">
                   <button
@@ -1082,9 +1080,9 @@ const AdministrationAndDevelopment: React.FC = () => {
                   >
                     Cancel
                   </button>
-              <button
-                type="submit"
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 inline-flex items-center"
+                  <button
+                    type="submit"
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-zip-red-600 hover:bg-zip-red-700 inline-flex items-center"
                     disabled={isCreating}
                   >
                     {isCreating ? (
@@ -1095,21 +1093,21 @@ const AdministrationAndDevelopment: React.FC = () => {
                     ) : (
                       'Create'
                     )}
-              </button>
+                  </button>
+                </div>
+              </form>
             </div>
-          </form>
-        </div>
-                      </div>
+          </div>
         </div>
       )}
 
       {/* Tracking Form Modal */}
       {showTrackingForm && selectedShipment && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-lg w-full max-w-4xl my-8">
             <div className="p-6 border-b">
               <h2 className="text-2xl font-bold">Edit Shipment Details</h2>
-                </div>
+            </div>
             <div className="p-6 max-h-[calc(90vh-8rem)] overflow-y-auto">
               <form onSubmit={handleUpdateTracking} className="space-y-6">
                 {/* Shipper Information */}
@@ -1125,7 +1123,7 @@ const AdministrationAndDevelopment: React.FC = () => {
                         className="w-full px-3 py-2 border rounded-md"
                         required
                       />
-              </div>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Shipper Address</label>
                       <input
@@ -1135,7 +1133,7 @@ const AdministrationAndDevelopment: React.FC = () => {
                         className="w-full px-3 py-2 border rounded-md"
                         required
                       />
-            </div>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Shipper Phone</label>
                       <input
@@ -1155,9 +1153,9 @@ const AdministrationAndDevelopment: React.FC = () => {
                         className="w-full px-3 py-2 border rounded-md"
                         required
                       />
-          </div>
-        </div>
-      </div>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Receiver Information */}
                 <div>
@@ -1165,13 +1163,13 @@ const AdministrationAndDevelopment: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Receiver Name</label>
-                <input
-                  type="text"
+                      <input
+                        type="text"
                         value={trackingFormData.receiverName || selectedShipment.receiverName}
                         onChange={(e) => setTrackingFormData({ ...trackingFormData, receiverName: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
+                        required
+                      />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Receiver Address</label>
@@ -1195,13 +1193,13 @@ const AdministrationAndDevelopment: React.FC = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Receiver Email</label>
-                <input
-                  type="email"
+                      <input
+                        type="email"
                         value={trackingFormData.receiverEmail || selectedShipment.receiverEmail}
                         onChange={(e) => setTrackingFormData({ ...trackingFormData, receiverEmail: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
+                        required
+                      />
                     </div>
                   </div>
                 </div>
@@ -1242,18 +1240,18 @@ const AdministrationAndDevelopment: React.FC = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Type of Shipment</label>
-                <select
+                      <select
                         value={trackingFormData.typeOfShipment || selectedShipment.typeOfShipment}
                         onChange={(e) => setTrackingFormData({ ...trackingFormData, typeOfShipment: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
-                  required
-                >
+                        required
+                      >
                         <option value="">Select Type</option>
                         <option value="standard">Standard</option>
                         <option value="express">Express</option>
                         <option value="economy">Economy</option>
-                </select>
-              </div>
+                      </select>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Shipment Mode</label>
                       <select
@@ -1326,8 +1324,8 @@ const AdministrationAndDevelopment: React.FC = () => {
                         required
                       />
                     </div>
-          </div>
-        </div>
+                  </div>
+                </div>
 
                 {/* Dates and Times */}
                 <div>
@@ -1519,7 +1517,7 @@ const AdministrationAndDevelopment: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 inline-flex items-center"
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-zip-red-600 hover:bg-zip-red-700 inline-flex items-center"
                     disabled={isUpdating}
                   >
                     {isUpdating ? (

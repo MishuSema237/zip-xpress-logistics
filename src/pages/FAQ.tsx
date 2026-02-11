@@ -54,7 +54,7 @@ const FAQ: React.FC = () => {
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Hero Section */}
-      <div className={`relative ${isDarkMode ? 'bg-[#1a0e0a]' : 'bg-[#351c15]'} py-16`}>
+      <div className={`relative ${isDarkMode ? 'bg-zip-blue-950' : 'bg-zip-blue-900'} py-16`}>
         <div className="absolute inset-0">
           <div className={`w-full h-full ${isDarkMode ? 'opacity-20' : 'opacity-30'} bg-pattern`}></div>
         </div>
@@ -62,7 +62,7 @@ const FAQ: React.FC = () => {
           <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
             Frequently Asked Questions
           </h1>
-          <p className="mt-6 text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="mt-6 text-xl text-white max-w-3xl mx-auto">
             Find answers to common questions about our shipping and logistics services
           </p>
         </div>
@@ -73,12 +73,11 @@ const FAQ: React.FC = () => {
         <div className="space-y-6">
           {faqItems.map((item, index) => (
             <AnimatedCard key={index} animation="fade" delay={`${index * 100}ms`}>
-              <div 
-                className={`rounded-lg overflow-hidden ${
-                  isDarkMode 
-                    ? 'bg-gray-800 hover:bg-gray-750' 
-                    : 'bg-white hover:bg-gray-50'
-                } shadow-lg transition-colors duration-200`}
+              <div
+                className={`rounded-lg overflow-hidden ${isDarkMode
+                  ? 'bg-gray-800 hover:bg-gray-750'
+                  : 'bg-white hover:bg-gray-50'
+                  } shadow-lg transition-colors duration-200`}
               >
                 <button
                   className="w-full px-6 py-4 flex justify-between items-center focus:outline-none"
@@ -87,7 +86,7 @@ const FAQ: React.FC = () => {
                   <h3 className={`text-left font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
                     {item.question}
                   </h3>
-                  <span className={`ml-4 flex-shrink-0 ${isDarkMode ? 'text-[#ffbe03]' : 'text-[#351c15]'}`}>
+                  <span className={`ml-4 flex-shrink-0 text-zip-red-600 dark:text-zip-red-500`}>
                     {openIndex === index ? <FaChevronUp /> : <FaChevronDown />}
                   </span>
                 </button>
@@ -113,11 +112,10 @@ const FAQ: React.FC = () => {
           </p>
           <a
             href="/contact"
-            className={`inline-flex items-center px-6 py-3 rounded-md text-base font-medium ${
-              isDarkMode 
-                ? 'bg-[#ffbe03] text-gray-900 hover:bg-[#e6a902]' 
-                : 'bg-[#351c15] text-white hover:bg-[#4a2a1f]'
-            } transition-colors duration-200`}
+            className={`inline-flex items-center px-6 py-3 rounded-md text-base font-medium ${isDarkMode
+              ? 'bg-zip-red-600 text-white hover:bg-zip-red-700'
+              : 'bg-zip-red-600 text-white hover:bg-zip-blue-800'
+              } transition-colors duration-200`}
           >
             Contact Us
           </a>

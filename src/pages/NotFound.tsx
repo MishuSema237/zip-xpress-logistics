@@ -18,8 +18,8 @@ const NotFound: React.FC = () => {
           </div>
 
           {/* Error Message */}
-          <h1 className="text-6xl font-extrabold text-[#351c15] mb-4">404</h1>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Page Not Found</h2>
+          <h1 className="text-6xl font-extrabold text-zip-blue-800 mb-4">404</h1>
+          <h2 className="text-3xl font-bold text-zip-blue-800 mb-4">Page Not Found</h2>
           <p className="text-xl text-gray-600 mb-8">
             Oops! The page you're looking for seems to have been misplaced in transit.
           </p>
@@ -28,14 +28,14 @@ const NotFound: React.FC = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to="/"
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#351c15] hover:bg-[#4a2a1f] transition-colors duration-150"
+              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-zip-red-600 hover:bg-zip-red-700 transition-colors duration-150"
             >
               <Icon icon={FaHome} className="mr-2" />
               Return Home
             </Link>
             <Link
               to="/track"
-              className="inline-flex items-center justify-center px-6 py-3 border border-[#351c15] text-base font-medium rounded-md text-[#351c15] bg-white hover:bg-gray-50 transition-colors duration-150"
+              className="inline-flex items-center justify-center px-6 py-3 border border-zip-red-600 text-base font-medium rounded-md text-zip-red-600 bg-white hover:bg-gray-50 transition-colors duration-150"
             >
               <Icon icon={FaSearch} className="mr-2" />
               Track Package
@@ -47,17 +47,17 @@ const NotFound: React.FC = () => {
             <p className="mb-4">Need assistance? Try these:</p>
             <ul className="space-y-2">
               <li>
-                <Link to="/contact" className="text-[#351c15] hover:underline">
+                <Link to="/contact" className="text-zip-red-600 hover:underline">
                   Contact Support
                 </Link>
               </li>
               <li>
-                <Link to="/services" className="text-[#351c15] hover:underline">
+                <Link to="/services" className="text-zip-red-600 hover:underline">
                   View Our Services
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-[#351c15] hover:underline">
+                <Link to="/about" className="text-zip-red-600 hover:underline">
                   About Us
                 </Link>
               </li>

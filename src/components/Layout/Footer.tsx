@@ -6,7 +6,7 @@ import Logo from '../Logo';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#351c15] text-white">
+    <footer className="bg-twilight-indigo-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -59,12 +59,12 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-start space-x-3">
                 <Icon icon={FaEnvelope} className="mt-1" size={16} />
-                <span className="text-gray-300 text-sm">globaltrackteam@gmail.com</span>
+                <span className="text-gray-300 text-sm">support@zipxpress.com</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Icon icon={FaMapMarkerAlt} className="mt-1" size={16} />
                 <span className="text-gray-300 text-sm">
-                  123 Global Track Street<br />
+                  123 Zip Xpress Street<br />
                   New York, NY 10001<br />
                   United States
                 </span>
@@ -96,7 +96,7 @@ const Footer: React.FC = () => {
         <div className="mt-12 pt-8 border-t border-gray-700">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-300 text-sm">
-              © 2020 Global Track. All rights reserved.
+              © {new Date().getFullYear()} Zip Xpress. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/privacy" className="text-gray-300 hover:text-white text-sm">

@@ -13,6 +13,7 @@ import {
 import Icon from '../components/icons/Icon';
 import AnimatedCard from '../components/animations/AnimatedCard';
 import { sendContactFormEmail } from '../services/emailService';
+import globeAndPoints from '../components/assets/gloeAndPoints.jpeg'
 
 const Contact: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -48,7 +49,7 @@ const Contact: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section */}
-      <div className="relative bg-[#351c15] dark:bg-gray-800 py-16">
+      <div className="relative bg-zip-blue-900 dark:bg-zip-blue-950 py-16">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
@@ -71,7 +72,7 @@ const Contact: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Send us a Message</h2>
+            <h2 className="text-3xl font-bold text-zip-blue-800 dark:text-white mb-8">Send us a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -79,7 +80,7 @@ const Contact: React.FC = () => {
                 </label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Icon icon={FaUser} size={16} className="text-[#351c15] dark:text-[#ffbe03]" />
+                    <Icon icon={FaUser} size={16} className="text-zip-red-600 dark:text-zip-red-500" />
                   </div>
                   <input
                     type="text"
@@ -88,11 +89,10 @@ const Contact: React.FC = () => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your name"
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg border ${
-                      isDarkMode 
-                        ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    } focus:outline-none focus:ring-2 focus:ring-[#ffbe03] dark:focus:ring-[#ffbe03] transition-all duration-300`}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border ${isDarkMode
+                      ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400'
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                      } focus:outline-none focus:ring-2 focus:ring-zip-red-500 dark:focus:ring-zip-red-500 transition-all duration-300`}
                   />
                 </div>
               </div>
@@ -102,7 +102,7 @@ const Contact: React.FC = () => {
                 </label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Icon icon={FaEnvelope} size={16} className="text-[#351c15] dark:text-[#ffbe03]" />
+                    <Icon icon={FaEnvelope} size={16} className="text-zip-red-600 dark:text-zip-red-500" />
                   </div>
                   <input
                     type="email"
@@ -111,11 +111,10 @@ const Contact: React.FC = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Your email"
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg border ${
-                      isDarkMode 
-                        ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    } focus:outline-none focus:ring-2 focus:ring-[#ffbe03] dark:focus:ring-[#ffbe03] transition-all duration-300`}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border ${isDarkMode
+                      ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400'
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                      } focus:outline-none focus:ring-2 focus:ring-zip-red-500 dark:focus:ring-zip-red-500 transition-all duration-300`}
                   />
                 </div>
               </div>
@@ -130,11 +129,10 @@ const Contact: React.FC = () => {
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="How can we help?"
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    isDarkMode 
-                      ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  } focus:outline-none focus:ring-2 focus:ring-[#ffbe03] dark:focus:ring-[#ffbe03] transition-all duration-300`}
+                  className={`w-full px-4 py-3 rounded-lg border ${isDarkMode
+                    ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400'
+                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                    } focus:outline-none focus:ring-2 focus:ring-zip-red-500 dark:focus:ring-zip-red-500 transition-all duration-300`}
                 />
               </div>
               <div>
@@ -148,21 +146,19 @@ const Contact: React.FC = () => {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Your message"
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    isDarkMode 
-                      ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  } focus:outline-none focus:ring-2 focus:ring-[#ffbe03] dark:focus:ring-[#ffbe03] transition-all duration-300`}
+                  className={`w-full px-4 py-3 rounded-lg border ${isDarkMode
+                    ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-400'
+                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                    } focus:outline-none focus:ring-2 focus:ring-zip-red-500 dark:focus:ring-zip-red-500 transition-all duration-300`}
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md ${
-                  isDarkMode 
-                    ? 'text-gray-900 bg-[#ffbe03] hover:bg-[#e6a902]' 
-                    : 'text-white bg-[#351c15] hover:bg-[#4a2a1f]'
-                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ffbe03] disabled:opacity-50 transition-all duration-300 transform hover:scale-105`}
+                className={`w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md ${isDarkMode
+                  ? 'text-white bg-zip-red-600 hover:bg-zip-red-700'
+                  : 'text-white bg-zip-red-600 hover:bg-zip-blue-800'
+                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zip-red-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105`}
               >
                 {loading ? (
                   <FaSpinner className="animate-spin mr-2" />
@@ -178,25 +174,25 @@ const Contact: React.FC = () => {
           <div className="space-y-8">
             {/* Contact Information Card */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Contact Information</h3>
+              <h3 className="text-2xl font-bold text-zip-blue-800 dark:text-white mb-6">Contact Information</h3>
               <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
-                    <Icon icon={FaEnvelope} size={24} className="text-[#ffbe03]" />
+                    <Icon icon={FaEnvelope} size={24} className="text-zip-red-500" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-base font-medium text-gray-900 dark:text-white">Email</p>
+                    <p className="text-base font-medium text-zip-blue-800 dark:text-white">Email</p>
                     <p className="mt-1 text-base text-gray-500 dark:text-gray-400">
-                      globaltrackteam@gmail.com
+                      support@zipxpress.com
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
-                    <Icon icon={FaClock} size={24} className="text-[#ffbe03]" />
+                    <Icon icon={FaClock} size={24} className="text-zip-red-500" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-base font-medium text-gray-900 dark:text-white">Business Hours</p>
+                    <p className="text-base font-medium text-zip-blue-800 dark:text-white">Business Hours</p>
                     <p className="mt-1 text-base text-gray-500 dark:text-gray-400">
                       Monday - Friday: 9:00 AM - 6:00 PM<br />
                       Saturday: 9:00 AM - 1:00 PM<br />
@@ -210,7 +206,7 @@ const Contact: React.FC = () => {
             {/* Contact Image */}
             <div className="relative rounded-xl overflow-hidden shadow-lg">
               <img
-                src="https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                src={globeAndPoints}
                 alt="Customer service team"
                 className="w-full h-[300px] object-cover"
               />
@@ -222,4 +218,4 @@ const Contact: React.FC = () => {
   );
 };
 
-export default Contact; 
+export default Contact;

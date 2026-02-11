@@ -47,7 +47,7 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-lg">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-[#4a2a1f]">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-zip-blue-800 dark:text-zip-red-500">
             Admin Login
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
@@ -68,7 +68,7 @@ const Login: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-[#4a2a1f] focus:border-[#4a2a1f] focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-zip-red-600 focus:border-zip-red-600 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
             </div>
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-[#4a2a1f] focus:border-[#4a2a1f] focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-zip-red-600 focus:border-zip-red-600 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
             </div>
@@ -94,9 +94,8 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#4a2a1f] hover:bg-[#3a1f17] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4a2a1f] ${
-                isLoading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-zip-blue-900 hover:bg-zip-blue-800 focus:ring-zip-red-600 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
             >
               {isLoading ? 'Signing in...' : 'Sign in'}
             </button>

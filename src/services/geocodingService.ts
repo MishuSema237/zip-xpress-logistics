@@ -17,86 +17,111 @@ const fallbackCoordinates = {
   default: { lat: 39.8283, lng: -98.5795 }
 };
 
-export const geocodeAddress = async (address: string): Promise<GeocodingResult> => {
-  if (geocodingCache.has(address)) {
-    return geocodingCache.get(address)!;
+/**
+ * Resolves a query string (Address name or "Lat, Lon") into a unified object.
+ * Returns: { coordinates: { lat, lng }, formattedAddress }
+ */
+export const geocodeAddress = async (query: string): Promise<GeocodingResult> => {
+  if (geocodingCache.has(query)) {
+    return geocodingCache.get(query)!;
   }
 
-  const cleanAddress = address.trim();
-  if (!cleanAddress) {
-    const fallbackResult: GeocodingResult = {
+  const cleanQuery = query.trim();
+  if (!cleanQuery) {
+    return {
       coordinates: fallbackCoordinates.default,
       formattedAddress: 'Unknown Location'
     };
-    geocodingCache.set(address, fallbackResult);
-    return fallbackResult;
   }
 
-  try {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleanAddress)}&limit=1&addressdetails=1`
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Geocoding request failed: ${response.status}`);
-    }
+  // 1. Detect if input is raw coordinates (e.g. "48.85, 2.35" or "48.85,2.35")
+  const coordRegex = /^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/;
+  const match = cleanQuery.match(coordRegex);
 
-    const data = await response.json();
-    
-    if (data && data.length > 0 && data[0].lat && data[0].lon) {
-      const lat = parseFloat(data[0].lat);
-      const lng = parseFloat(data[0].lon);
-      
-      if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-        throw new Error('Invalid coordinates returned');
+  if (match) {
+    const lat = parseFloat(match[1]);
+    const lng = parseFloat(match[3]);
+
+    try {
+      // Using Photon API (OpenStreetMap based, CORS friendly)
+      const url = `https://photon.komoot.io/reverse?lon=${lng}&lat=${lat}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.features && data.features.length > 0) {
+        const props = data.features[0].properties;
+
+        // Format Address: "House# Street, City, State, Postcode, Country"
+        let addressName = props.name;
+        if (props.housenumber && props.street) {
+          addressName = `${props.housenumber} ${props.street}`;
+        } else if (props.street) {
+          addressName = props.street;
+        }
+
+        const addressParts = [
+          addressName,
+          props.city,
+          props.state,
+          props.postcode,
+          props.country
+        ].filter((item: any) => item && item !== "");
+
+        const uniqueParts = addressParts.filter((item: any, index: number) => addressParts.indexOf(item) === index);
+
+        const result: GeocodingResult = {
+          coordinates: { lat, lng },
+          formattedAddress: uniqueParts.join(", ") || `Coordinates: ${lat}, ${lng}`
+        };
+        geocodingCache.set(query, result);
+        return result;
       }
-      
-      const result: GeocodingResult = {
+    } catch (error) {
+      console.error("Reverse geocoding error:", error);
+      return {
         coordinates: { lat, lng },
-        formattedAddress: data[0].display_name || cleanAddress
+        formattedAddress: `Coordinates: ${lat}, ${lng}`
       };
-      
-      geocodingCache.set(address, result);
+    }
+  }
+
+  // 2. Input is Address -> Forward Geocode
+  try {
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(cleanQuery)}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.features && data.features.length > 0) {
+      const coords = data.features[0].geometry.coordinates; // Photon returns [lon, lat]
+      const props = data.features[0].properties;
+
+      const addressParts = [
+        props.name,
+        props.street,
+        props.city,
+        props.country
+      ].filter(Boolean);
+
+      const result: GeocodingResult = {
+        coordinates: { lat: coords[1], lng: coords[0] },
+        formattedAddress: addressParts.join(", ") || cleanQuery
+      };
+      geocodingCache.set(query, result);
       return result;
-    } else {
-      throw new Error('Address not found');
     }
   } catch (error) {
-    console.error(`Geocoding error for "${cleanAddress}":`, error);
-    
-    const lowerAddress = cleanAddress.toLowerCase();
-    let fallbackCoords = fallbackCoordinates.default;
-    
-    if (lowerAddress.includes('europe') || lowerAddress.includes('uk') || lowerAddress.includes('germany') || lowerAddress.includes('france')) {
-      fallbackCoords = fallbackCoordinates.europe;
-    } else if (lowerAddress.includes('asia') || lowerAddress.includes('china') || lowerAddress.includes('japan') || lowerAddress.includes('india')) {
-      fallbackCoords = fallbackCoordinates.asia;
-    }
-    
-    const fallbackResult: GeocodingResult = {
-      coordinates: fallbackCoords,
-      formattedAddress: cleanAddress
-    };
-    geocodingCache.set(address, fallbackResult);
-    return fallbackResult;
+    console.error("Geocoding error:", error);
   }
+
+  // Fallback if geocoding fails
+  const fallbackResult: GeocodingResult = {
+    coordinates: fallbackCoordinates.default,
+    formattedAddress: cleanQuery
+  };
+  geocodingCache.set(query, fallbackResult);
+  return fallbackResult;
 };
 
 export const geocodeMultipleAddresses = async (addresses: string[]): Promise<GeocodingResult[]> => {
-  const results: GeocodingResult[] = [];
-  
-  for (const address of addresses) {
-    try {
-      const result = await geocodeAddress(address);
-      results.push(result);
-    } catch (error) {
-      console.error(`Failed to geocode address: ${address}`, error);
-      results.push({
-        coordinates: fallbackCoordinates.default,
-        formattedAddress: address
-      });
-    }
-  }
-  
-  return results;
+  return Promise.all(addresses.map(address => geocodeAddress(address)));
 };
