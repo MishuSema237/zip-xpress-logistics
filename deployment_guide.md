@@ -19,24 +19,30 @@ This guide walk you through deploying your application to **Render** (Backend) a
 
 ---
 
-## Phase 2: Frontend Deployment (Vercel)
+## Phase 3: Custom Domain & SSL Setup (Zip-Xpresslogistics.com)
 
-1.  **Create a New Project**: Log in to [Vercel](https://vercel.com/) and click **Add New > Project**.
-2.  **Import GitHub Repo**: Select the same `zip-xpress-logistics` repository.
-3.  **Configure Project**:
-    *   **Framework Preset**: Create React App (detected automatically).
-    *   **Root Directory**: `.` (The root of the repo).
-4.  **Add Environment Variables**:
-    *   **Important**: Add `REACT_APP_API_URL`.
-    *   **Value**: Paste your Render URL followed by `/api` (e.g., `https://zip-xpress-backend.onrender.com/api`).
-5.  **Deploy**: Click **Deploy**. Vercel will build your React app and link it to your Render backend.
+**Since you bought the domain directly on Vercel, the process is largely automatic:**
+
+1.  **Assign Domain**:
+    *   In your Vercel project, go to **Settings > Domains**.
+    *   If your domain isn't listed, click **Add** and select your purchased domain.
+2.  **DNS & SSL Verification**:
+    *   Vercel automatically configures the DNS records for domains bought through their platform.
+    *   An SSL certificate is generated automatically as soon as the domain is assigned to the project.
+3.  **Troubleshooting "Not Secure"**:
+    *   **Time**: Even for Vercel-bought domains, it can take **15 to 30 minutes** for the certificate to be issued and a few hours for global DNS propagation.
+    *   **Deployment**: Ensure your latest code is successfully **Deployed** in the "Deployments" tab. The domain must be "Active" and "Assigned" to your main branch.
 
 ---
 
 ## Final Verification
-*   Visit your **Vercel URL**.
+*   Visit [https://zip-xpresslogistics.com](https://zip-xpresslogistics.com).
+*   Check for the **Padlock icon** in the browser address bar.
 *   Go to a tracking page and verify names are being geocoded using the Photon API.
 *   Submit a contact form to ensure the Render server is receiving requests and sending emails.
 
+> [!IMPORTANT]
+> **SSL Propagation**: If you just added the domain, it is normal to see "Not Secure" for a short period while the global DNS updates and Vercel verifies your ownership to issue the certificate.
+
 > [!NOTE]
-> If you encounter CORS issues, ensured the `cors()` middleware in `server/index.js` is active. For production, it's safer to configure it as `cors({ origin: 'https://your-vercel-domain.com' })`.
+> If you encounter CORS issues, ensured the `cors()` middleware in `server/index.js` is active. For production, it's safer to configure it as `cors({ origin: 'https://zip-xpresslogistics.com' })`.
