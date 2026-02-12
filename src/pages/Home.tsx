@@ -316,39 +316,6 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Global Branches Section */}
-      <div className="py-16 bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
-          <AnimatedCard animation="fade">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white sm:text-4xl">
-                Zip Xpress Global Branches and WareHouses
-              </h2>
-              <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
-                Strategic locations across key international logistics hubs to serve you better.
-              </p>
-            </div>
-          </AnimatedCard>
-
-          <AnimatedCard animation="fade" delay="200ms">
-            <div className="mt-8 mb-12 flex justify-center">
-              <div className="relative max-w-4xl w-full md:rounded-2xl overflow-hidden shadow-2xl border-0 md:border-4 md:border-white dark:border-gray-800">
-                <img
-                  src={globalMap}
-                  alt="Zip Xpress Global Logistics Map"
-                  className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-zip-blue-900/20 to-transparent pointer-events-none"></div>
-              </div>
-            </div>
-          </AnimatedCard>
-
-          <div className="mt-8">
-            <GlobalBranches variant="marquee" />
-          </div>
-        </div>
-      </div>
-
       {/* How It Works Section */}
       <div className="py-16 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -644,6 +611,39 @@ const Home: React.FC = () => {
               </div>
               <p className="mt-2 text-gray-500 dark:text-gray-400 text-center">Based on 1,482 reviews</p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Global Branches Section */}
+      <div className="py-16 bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+          <AnimatedCard animation="fade">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white sm:text-4xl">
+                Zip Xpress Global Branches and WareHouses
+              </h2>
+              <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
+                Strategic locations across key international logistics hubs to serve you better.
+              </p>
+            </div>
+          </AnimatedCard>
+
+          <AnimatedCard animation="fade" delay="200ms">
+            <div className="mt-8 mb-12 flex justify-center">
+              <div className="relative max-w-4xl w-full md:rounded-2xl overflow-hidden shadow-2xl border-0 md:border-4 md:border-white dark:border-gray-800">
+                <img
+                  src={globalMap}
+                  alt="Zip Xpress Global Logistics Map"
+                  className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-zip-blue-900/20 to-transparent pointer-events-none"></div>
+              </div>
+            </div>
+          </AnimatedCard>
+
+          <div className="mt-8">
+            <GlobalBranches variant="marquee" />
           </div>
         </div>
       </div>
