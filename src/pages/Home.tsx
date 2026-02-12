@@ -27,7 +27,7 @@ const Home: React.FC = () => {
               <span className='text-zip-red-500'>Logistics Solutions</span>
             </h1>
             <p className="mt-3 max-w-md mx-auto text-base text-gray-100 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-              Comprehensive shipping and logistics services. We handle everything from small packages to large freight, ensuring efficient delivery worldwide.
+              Zip Xpress provides comprehensive shipping and logistics services. We handle everything from small packages to large freight, ensuring efficient delivery worldwide.
             </p>
             <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
               <div className="rounded-md shadow">
@@ -107,7 +107,7 @@ const Home: React.FC = () => {
                 </div>
                 <h3 className="text-lg font-medium text-zip-blue-800 dark:text-white">GLOBAL NETWORK</h3>
                 <p className="mt-2 text-gray-500 dark:text-gray-400">
-                  With over 19 years of experience, we connect businesses and individuals across 150+ countries with reliable shipping solutions.
+                  With over 19 years of experience, Zip Xpress connects businesses and individuals across 150+ countries with reliable shipping solutions.
                 </p>
               </div>
             </AnimatedCard>
@@ -141,7 +141,7 @@ const Home: React.FC = () => {
                 </div>
                 <h3 className="text-lg font-medium text-zip-blue-800 dark:text-white">FULL-SERVICE SUPPORT</h3>
                 <p className="mt-2 text-gray-500 dark:text-gray-400">
-                  From customs clearance to last-mile delivery, we manage every aspect of your shipment with precision and care.
+                  From customs clearance to last-mile delivery, Zip Xpress manages every aspect of your shipment with precision and care.
                 </p>
               </div>
             </AnimatedCard>
@@ -172,10 +172,10 @@ const Home: React.FC = () => {
           <AnimatedCard animation="fade">
             <div className="text-center">
               <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white sm:text-4xl">
-                Our Services
+                Our Zip Xpress Services
               </h2>
               <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
-                Comprehensive logistics solutions for all your shipping needs
+                Premium logistics solutions for all your Zip Xpress shipping needs
               </p>
             </div>
           </AnimatedCard>
@@ -262,10 +262,10 @@ const Home: React.FC = () => {
           <AnimatedCard animation="fade">
             <div className="text-center">
               <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white sm:text-4xl">
-                Why Choose Us
+                Why Choose Zip Xpress
               </h2>
               <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
-                We provide exceptional logistics services with a focus on quality and reliability
+                We provide exceptional Zip Xpress logistics services with a focus on quality and reliability
               </p>
             </div>
           </AnimatedCard>
@@ -320,7 +320,7 @@ const Home: React.FC = () => {
           <AnimatedCard animation="fade">
             <div className="text-center">
               <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white sm:text-4xl">
-                How It Works
+                How It Works at Zip Xpress
               </h2>
               <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
                 Simple steps to ship your packages worldwide
@@ -497,7 +497,7 @@ const Home: React.FC = () => {
           <AnimatedCard animation="fade">
             <div className="text-center">
               <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white sm:text-4xl">
-                What Our Clients Say
+                What Our Zip Xpress Clients Say
               </h2>
               <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
                 Don't just take our word for it - hear from our satisfied customers
@@ -619,7 +619,7 @@ const Home: React.FC = () => {
           <AnimatedCard animation="fade">
             <div className="text-center">
               <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-                Ready to Ship with Us?
+                Ready to Ship with Zip Xpress?
               </h2>
               <p className="mt-4 text-xl text-gray-300">
                 Experience the difference of professional global logistics services

@@ -15,11 +15,11 @@ const FAQ: React.FC = () => {
   const faqItems: FAQItem[] = [
     {
       question: "How can I track my shipment?",
-      answer: "You can track your shipment by entering your tracking number in our Track Package page. The tracking number is provided to you when you book a shipment. Our real-time tracking system will show you the current status and location of your package."
+      answer: "You can track your shipment by entering your tracking number in the Zip Xpress Track Package page. The tracking number is provided to you when you book a shipment. Our real-time tracking system will show you the current status and location of your package."
     },
     {
       question: "What shipping services do you offer?",
-      answer: "We offer a comprehensive range of shipping services including Air Freight, Sea Freight, and Ground Transport. We also provide additional services such as warehousing, customs clearance, and cargo insurance to meet all your logistics needs."
+      answer: "We offer a comprehensive range of Zip Xpress shipping services including Air Freight, Sea Freight, and Ground Transport. We also provide additional services such as warehousing, customs clearance, and cargo insurance to meet all your logistics needs."
     },
     {
       question: "How are shipping rates calculated?",
@@ -31,7 +31,7 @@ const FAQ: React.FC = () => {
     },
     {
       question: "Do you offer international shipping?",
-      answer: "Yes, we offer international shipping services to over 150 countries worldwide. Our global network ensures reliable and efficient delivery of your shipments across borders, with full customs clearance support."
+      answer: "Yes, we offer international shipping services to over 150 countries worldwide. Our Zip Xpress global network ensures reliable and efficient delivery of your shipments across borders, with full customs clearance support."
     },
     {
       question: "What items are prohibited for shipping?",
@@ -60,10 +60,10 @@ const FAQ: React.FC = () => {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Frequently Asked Questions
+            Zip Xpress Frequently Asked Questions
           </h1>
           <p className="mt-6 text-xl text-white max-w-3xl mx-auto">
-            Find answers to common questions about our shipping and logistics services
+            Find answers to common questions about Zip Xpress shipping and logistics services
           </p>
         </div>
       </div>

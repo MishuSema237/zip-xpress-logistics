@@ -19,10 +19,10 @@ const About: React.FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedCard animation="fade">
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              About Us
+              About Zip Xpress
             </h1>
             <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-300">
-              Building the future of global logistics with technology, reliability, and customer-first service.
+              Building the future of global logistics with Zip Xpress technology, reliability, and customer-first service.
             </p>
           </AnimatedCard>
         </div>
@@ -48,7 +48,7 @@ const About: React.FC = () => {
                     <div className="ml-4">
                       <h3 className="text-lg font-medium text-zip-red-600 dark:text-white">19+ Years of Experience</h3>
                       <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
-                        Over a decade of excellence in the logistics industry.
+                        Over 19 years of Zip Xpress excellence in the logistics industry.
                       </p>
                     </div>
                   </div>
@@ -88,7 +88,7 @@ const About: React.FC = () => {
           <AnimatedCard animation="fade">
             <div className="text-center">
               <h2 className="text-3xl font-extrabold text-zip-red-600 dark:text-white sm:text-4xl">
-                Our Core Values
+                Our Zip Xpress Core Values
               </h2>
               <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
                 The principles that guide our every action and decision.
@@ -138,7 +138,7 @@ const About: React.FC = () => {
                     </div>
                     <h3 className="mt-8 text-lg font-medium text-zip-red-600 dark:text-white tracking-tight">Excellence</h3>
                     <p className="mt-5 text-base text-gray-500 dark:text-gray-400">
-                      We are committed to the highest standards of quality in all our services and operations.
+                      We are committed to the highest standards of quality in all Zip Xpress services and operations.
                     </p>
                   </div>
                 </div>
@@ -154,10 +154,10 @@ const About: React.FC = () => {
           <div className="max-w-4xl mx-auto text-center">
             <AnimatedCard animation="fade">
               <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-                Trusted by businesses worldwide
+                Zip Xpress is Trusted by businesses worldwide
               </h2>
               <p className="mt-3 text-xl text-gray-300 sm:mt-4">
-                Our global network and technology-driven approach deliver results.
+                Our Zip Xpress global network and technology-driven approach deliver results.
               </p>
             </AnimatedCard>
           </div>

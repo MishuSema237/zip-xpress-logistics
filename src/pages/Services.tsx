@@ -47,10 +47,10 @@ const Services: React.FC = () => {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Our Services
+            Zip Xpress Services
           </h1>
           <p className="mt-6 text-xl text-gray-300 dark:text-gray-200 max-w-3xl mx-auto">
-            Comprehensive logistics solutions tailored to meet your global shipping needs with precision and reliability.
+            Comprehensive logistics solutions tailored to meet your global Zip Xpress shipping needs with precision and reliability.
           </p>
         </div>
       </div>
@@ -85,10 +85,10 @@ const Services: React.FC = () => {
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
             <div>
               <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white sm:text-4xl">
-                Our Services
+                Our Zip Xpress Logistics Services
               </h2>
               <p className="mt-3 max-w-3xl text-lg text-gray-500 dark:text-gray-400">
-                We offer comprehensive logistics solutions tailored to meet your global shipping needs. Our services are designed to provide efficiency, reliability, and peace of mind.
+                We offer comprehensive Zip Xpress logistics solutions tailored to meet your global shipping needs. Our services are designed to provide efficiency, reliability, and peace of mind.
               </p>
               <div className="mt-8 space-y-6">
                 <div className="flex">
@@ -134,9 +134,9 @@ const Services: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white">Our Service Offerings</h2>
+            <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white">Our Zip Xpress Service Offerings</h2>
             <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-              Choose from our comprehensive range of shipping solutions
+              Choose from our comprehensive range of Zip Xpress shipping solutions
             </p>
           </div>
           <div className="mt-12 relative">
@@ -497,7 +497,7 @@ const Services: React.FC = () => {
       <div className="bg-gray-50 dark:bg-gray-900 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white">Our Global Partners</h2>
+            <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white">Our Zip Xpress Global Partners</h2>
             <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
               We collaborate with the world's leading logistics and shipping companies to provide comprehensive tracking solutions
             </p>
@@ -563,7 +563,7 @@ const Services: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white">Additional Services</h2>
+            <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white">Zip Xpress Additional Services</h2>
             <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
               Comprehensive logistics solutions to meet all your shipping needs
             </p>
@@ -604,9 +604,9 @@ const Services: React.FC = () => {
       <div className="bg-gray-50 dark:bg-gray-900 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white">Why Choose Us</h2>
+            <h2 className="text-3xl font-extrabold text-zip-blue-800 dark:text-white">Why Choose Zip Xpress</h2>
             <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-              Experience the difference with our comprehensive shipping solutions
+              Experience the difference with our comprehensive Zip Xpress shipping solutions
             </p>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -674,7 +674,7 @@ const Services: React.FC = () => {
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
             <div>
               <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-                Ready to Ship?
+                Ready to Ship with Zip Xpress?
               </h2>
               <p className="mt-3 max-w-3xl text-lg text-gray-300 dark:text-gray-200">
                 Get started with our comprehensive shipping solutions today.
