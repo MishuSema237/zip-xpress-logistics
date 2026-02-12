@@ -14,6 +14,7 @@ import Icon from '../components/icons/Icon';
 import AnimatedCard from '../components/animations/AnimatedCard';
 import { sendContactFormEmail } from '../services/emailService';
 import warehouseLocations from '../components/assets/map1.png';
+import GlobalBranches from '../components/GlobalBranches';
 
 const Contact: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -212,6 +213,14 @@ const Contact: React.FC = () => {
               />
             </div>
           </div>
+        </div>
+        {/* Global Branches & Warehouses Section */}
+        <div className="mt-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-zip-blue-800 dark:text-white">Zip Xpress Global Branches and Warehouses</h2>
+            <p className="mt-4 text-gray-500 dark:text-gray-400">Our strategic locations ensure efficient logistics coverage across key global markets.</p>
+          </div>
+          <GlobalBranches variant="marquee" />
         </div>
       </div>
     </div>
