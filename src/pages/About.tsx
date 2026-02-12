@@ -69,7 +69,7 @@ const About: React.FC = () => {
             </AnimatedCard>
             <div className="mt-8 lg:mt-0">
               <AnimatedCard animation="fade" delay="200ms">
-                <div className="relative rounded-lg shadow-lg overflow-hidden">
+                <div className="relative rounded-lg overflow-hidden">
                   <img
                     className="w-full h-full object-cover"
                     src={factoryCar}

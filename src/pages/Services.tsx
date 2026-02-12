@@ -669,7 +669,7 @@ const Services: React.FC = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-zip-red-600 dark:bg-[#1a0e0a]">
+      <div className="bg-zip-red-600 dark:bg-zip-red-700">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 lg:py-16">
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
             <div>
@@ -682,7 +682,7 @@ const Services: React.FC = () => {
               <div className="mt-8">
                 <a
                   href="/contact"
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-twilight-indigo-900 dark:text-[#1a0e0a] bg-white hover:bg-gray-100 dark:bg-french-blue-500 dark:hover:bg-french-blue-600"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-zip-red-600  bg-white  hover:bg-gray-100 dark:bg-french-blue-500 dark:hover:bg-french-blue-600"
                 >
                   Get Started
                 </a>

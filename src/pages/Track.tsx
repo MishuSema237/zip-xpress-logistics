@@ -44,7 +44,7 @@ import {
 } from 'react-icons/fa';
 import AnimatedCard from '../components/animations/AnimatedCard';
 import ShipmentMap from '../components/ShipmentMap';
-import trustedParner from '../components/assets/ZipXpressLogoWithName.png';
+import trustedParner from '../components/assets/parcelandPhone.jpg';
 
 const Track: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -759,9 +759,8 @@ const Track: React.FC = () => {
                   <img
                     src={trustedParner}
                     alt="Shipping operations"
-                    className="rounded-xl shadow-2xl"
+                    className="rounded-xl "
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-xl"></div>
                 </div>
               </div>
             </div>

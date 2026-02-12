@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="text-center sm:text-left">
             <div className="flex justify-center sm:justify-start mb-6">
-              <Logo className="!bg-transparent" />
+              <Logo className="!bg-transparent" theme="dark" />
             </div>
             <p className="text-gray-300 mb-6 text-sm sm:text-base">
               Zip Xpress - Your trusted partner in global logistics and transportation services. Delivering excellence in shipping solutions since 2020.

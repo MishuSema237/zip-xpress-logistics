@@ -627,7 +627,7 @@ const Home: React.FC = () => {
               <div className="mt-8 flex justify-center space-x-4">
                 <Link
                   to="/contact"
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-zip-blue-800 dark:text-white bg-white dark:bg-zip-red-600 hover:bg-gray-50 dark:hover:bg-zip-red-700"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-zip-red-600  bg-white hover:bg-gray-50 dark:hover:bg-zip-red-700"
                 >
                   Get Started
                 </Link>

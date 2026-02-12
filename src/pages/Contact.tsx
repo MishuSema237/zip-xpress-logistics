@@ -13,7 +13,7 @@ import {
 import Icon from '../components/icons/Icon';
 import AnimatedCard from '../components/animations/AnimatedCard';
 import { sendContactFormEmail } from '../services/emailService';
-import globeAndPoints from '../components/assets/gloeAndPoints.jpeg'
+import globeAndPoints from '../components/assets/map1.png'
 
 const Contact: React.FC = () => {
   const { isDarkMode } = useTheme();
