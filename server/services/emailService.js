@@ -23,7 +23,6 @@ const sendEmail = async (to, subject, html) => {
     // Try Resend first in production or if API key is available
     if (resend && process.env.NODE_ENV === 'production') {
         try {
-            console.log(`[Resend] Attempting to send email to: ${to}`);
             const { data, error } = await resend.emails.send({
                 from: process.env.SMTP_FROM || 'Zip Xpress <onboarding@resend.dev>',
                 to,
@@ -31,32 +30,24 @@ const sendEmail = async (to, subject, html) => {
                 html
             });
 
-            if (error) {
-                console.error('[Resend] Error:', error);
-                throw error;
-            }
-
-            console.log('[Resend] Message sent successfully:', data.id);
+            if (error) throw error;
             return data;
         } catch (error) {
-            console.error('[Resend] Failed, falling back to SMTP:', error.message);
-            // If Resend fails, it falls through to SMTP below
+            // Fallback to SMTP
         }
     }
 
     // SMTP Fallback (Local development or if Resend fails)
     try {
-        console.log(`[SMTP] Attempting to send email to: ${to}`);
         const info = await transporter.sendMail({
             from: process.env.SMTP_FROM,
             to,
             subject,
             html
         });
-        console.log('[SMTP] Message sent successfully: %s', info.messageId);
         return info;
     } catch (error) {
-        console.error('[SMTP] Error:', error.message);
+        console.error('Email error:', error.message);
         throw error;
     }
 };

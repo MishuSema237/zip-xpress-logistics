@@ -16,11 +16,7 @@ router.post('/', async (req, res) => {
         res.json({ success: true, message: 'Message sent successfully' });
     } catch (error) {
         console.error('Contact form error:', error);
-        res.status(500).json({
-            success: false,
-            message: error.message || 'Failed to send message',
-            details: error.code // Include error code for faster debugging
-        });
+        res.status(500).json({ message: 'Failed to send message' });
     }
 });
 
