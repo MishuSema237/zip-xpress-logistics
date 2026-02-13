@@ -2,9 +2,9 @@ const nodemailer = require('nodemailer');
 const { getShipperTemplate, getReceiverTemplate, getContactTemplate } = require('../utils/emailTemplates');
 
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: false, // true for 465, false for other ports
+    host: process.env.SMTP_HOST || 'smtp.zoho.com',
+    port: parseInt(process.env.SMTP_PORT) || 465,
+    secure: (process.env.SMTP_PORT == 465), // true for 465, false for other ports
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
