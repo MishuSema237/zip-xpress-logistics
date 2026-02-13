@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-start space-x-3">
                 <Icon icon={FaEnvelope} className="mt-1" size={16} />
-                <span className="text-gray-300 text-sm">support@zipxpress.com</span>
+                <span className="text-gray-300 text-sm">support@zip-xpresslogistics.com</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Icon icon={FaMapMarkerAlt} className="mt-1" size={16} />
@@ -76,18 +76,18 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white">
+              <Link to="/contact" className="text-gray-300 hover:text-white" aria-label="Facebook">
                 <Icon icon={FaFacebook} size={20} />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white">
+              </Link>
+              <Link to="/contact" className="text-gray-300 hover:text-white" aria-label="Twitter">
                 <Icon icon={FaTwitter} size={20} />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white">
+              </Link>
+              <Link to="/contact" className="text-gray-300 hover:text-white" aria-label="LinkedIn">
                 <Icon icon={FaLinkedin} size={20} />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white">
+              </Link>
+              <Link to="/contact" className="text-gray-300 hover:text-white" aria-label="Instagram">
                 <Icon icon={FaInstagram} size={20} />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

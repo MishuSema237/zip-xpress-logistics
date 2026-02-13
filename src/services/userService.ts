@@ -21,8 +21,8 @@ export interface UserInput {
 
 const DEFAULT_ADMIN: Omit<User, 'id'> = {
   username: 'Admin',
-  email: 'admin@zipxpress.com', // Updated to new branding email or generic admin email
-  password: 'password123', // Simplified for demo/testing since we are removing Firebase auth. Ideally user changes this.
+  email: 'admin@zip-xpresslogistics.com', // Updated to new official domain
+  password: 'password123',
   // Wait, let's keep the original password if possible but simplified logic.
   // The original password was 'Glob@ltr@ckTe@m100$'. I should probably keep it or prompt user.
   // I will use 'admin' / 'admin' or similar for easier testing, but better stick to safe defaults.

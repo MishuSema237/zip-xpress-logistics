@@ -184,7 +184,7 @@ const Contact: React.FC = () => {
                   <div className="ml-4">
                     <p className="text-base font-medium text-zip-blue-800 dark:text-white">Email</p>
                     <p className="mt-1 text-base text-gray-500 dark:text-gray-400">
-                      support@zipxpress.com
+                      support@zip-xpresslogistics.com
                     </p>
                   </div>
                 </div>

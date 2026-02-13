@@ -61,6 +61,13 @@ const branches: Branch[] = [
         postalCode: '27476',
         country: 'Germany',
         address: 'Am Grooten Steen 3A'
+    },
+    {
+        city: 'Coober Pedy',
+        region: 'SA',
+        postalCode: '5723',
+        country: 'Australia',
+        address: 'Lot 179 Italian Club Rd'
     }
 ];
 

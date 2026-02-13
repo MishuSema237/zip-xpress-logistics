@@ -196,7 +196,7 @@ const AdministrationAndDevelopment: React.FC = () => {
         id: 'test-id',
         trackingNumber: 'TEST' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0'),
         shipperName: 'Test Shipper',
-        shipperEmail: 'admin@zipxpress.com',
+        shipperEmail: 'admin@zip-xpresslogistics.com',
         shipperAddress: '123 Shipper St, Test City',
         shipperPhone: '+1 234-567-8900',
         receiverName: 'Test Receiver',

@@ -72,38 +72,34 @@ const Footer: React.FC = () => {
               Zip Xpress - Your trusted partner in global logistics and transportation services. Delivering excellence in shipping solutions since 2020.
             </p>
             <div className="flex justify-center sm:justify-start space-x-4">
-              <a
-                href="https://www.facebook.com/ups"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-zip-red-500transition-colors duration-300 transform hover:scale-110"
+              <button
+                onClick={() => handleNavClick('/contact')}
+                className="text-gray-300 hover:text-zip-red-500 transition-colors duration-300 transform hover:scale-110"
+                aria-label="Facebook"
               >
                 <FaFacebook className="h-5 w-5" />
-              </a>
-              <a
-                href="https://twitter.com/UPS"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-zip-red-500transition-colors duration-300 transform hover:scale-110"
+              </button>
+              <button
+                onClick={() => handleNavClick('/contact')}
+                className="text-gray-300 hover:text-zip-red-500 transition-colors duration-300 transform hover:scale-110"
+                aria-label="Twitter"
               >
                 <FaTwitter className="h-5 w-5" />
-              </a>
-              <a
-                href="https://www.instagram.com/ups"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-zip-red-500transition-colors duration-300 transform hover:scale-110"
+              </button>
+              <button
+                onClick={() => handleNavClick('/contact')}
+                className="text-gray-300 hover:text-zip-red-500 transition-colors duration-300 transform hover:scale-110"
+                aria-label="Instagram"
               >
                 <FaInstagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://www.linkedin.com/company/ups"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-zip-red-500transition-colors duration-300 transform hover:scale-110"
+              </button>
+              <button
+                onClick={() => handleNavClick('/contact')}
+                className="text-gray-300 hover:text-zip-red-500 transition-colors duration-300 transform hover:scale-110"
+                aria-label="LinkedIn"
               >
                 <FaLinkedin className="h-5 w-5" />
-              </a>
+              </button>
             </div>
           </div>
 
@@ -186,7 +182,7 @@ const Footer: React.FC = () => {
               <li className="flex items-center justify-center sm:justify-start space-x-3">
                 <Icon icon={FaEnvelope} size={16} className="text-french-blue-400" />
                 <span className="text-gray-300">
-                  <a href="mailto:support@zipxpress.com" className="hover:text-zip-red-500transition-colors duration-300 text-sm sm:text-base">support@zipxpress.com</a>
+                  <a href="mailto:support@zip-xpresslogistics.com" className="hover:text-zip-red-500transition-colors duration-300 text-sm sm:text-base">support@zip-xpresslogistics.com</a>
                 </span>
               </li>
             </ul>
