@@ -51,12 +51,28 @@ const saveUsersToStorage = (users: User[]) => {
 export const getAllUsers = async (): Promise<User[]> => {
   let users = getUsersFromStorage();
 
-  // Add default admin if no users exist
-  if (users.length === 0) {
+  // Find admin user
+  const adminIndex = users.findIndex(u => u.role === 'admin');
+
+  if (adminIndex === -1) {
+    // Add default admin if no admin exists
     const adminId = uuidv4();
-    const adminUser = { id: adminId, ...DEFAULT_ADMIN, password: 'password123' }; // Default password
-    users = [adminUser];
+    const adminUser = { id: adminId, ...DEFAULT_ADMIN };
+    users.push(adminUser);
     saveUsersToStorage(users);
+  } else {
+    // Sync existing admin with DEFAULT_ADMIN if they differ
+    // This allows the user to change credentials in the code and have them update
+    const currentAdmin = users[adminIndex];
+    if (currentAdmin.email !== DEFAULT_ADMIN.email || currentAdmin.password !== DEFAULT_ADMIN.password) {
+      users[adminIndex] = {
+        ...currentAdmin,
+        email: DEFAULT_ADMIN.email,
+        password: DEFAULT_ADMIN.password,
+        updatedAt: new Date().toISOString()
+      };
+      saveUsersToStorage(users);
+    }
   }
 
   return users;
