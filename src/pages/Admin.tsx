@@ -456,7 +456,7 @@ const Admin: React.FC = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Total Freight</label>
                     <input
-                      type="number"
+                      type="text"
                       required
                       value={totalFreight}
                       onChange={(e) => setTotalFreight(e.target.value)}

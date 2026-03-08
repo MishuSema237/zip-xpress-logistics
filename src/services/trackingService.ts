@@ -70,7 +70,7 @@ const mapTrackingToShipment = (data: any): any => {
     ...data,
     typeOfShipment: data.shipmentType, // Map difference
     productQuantity: parseInt(data.productQuantity || '0'),
-    totalFreight: parseFloat(data.totalFreight || '0'),
+    totalFreight: data.totalFreight || '0',
     // weight is in packages usually or total weight.
     // If admin form has 'weight', assume it's total weight or package weight?
     // Admin form has 'weight' in package details section.
@@ -102,7 +102,7 @@ const mapShipmentToTracking = (shipment: Shipment): TrackingDetails => {
     product: shipment.product,
     productQuantity: shipment.productQuantity.toString(),
     paymentMode: shipment.paymentMode,
-    totalFreight: shipment.totalFreight.toString(),
+    totalFreight: (shipment.totalFreight || '0').toString(),
     expectedDeliveryDate: shipment.expectedDeliveryDate,
     departureTime: shipment.departureTime,
     pickupDate: shipment.pickupDate,

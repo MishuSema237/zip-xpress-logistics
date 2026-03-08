@@ -39,7 +39,7 @@ export interface Shipment {
   typeOfShipment: string;
   shipmentMode: string;
   paymentMode: string;
-  totalFreight: number;
+  totalFreight: string;
   pickupDate: string;
   pickupTime: string;
   departureTime: string;
@@ -100,7 +100,7 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         typeOfShipment: 'express',
         shipmentMode: 'air',
         paymentMode: 'prepaid',
-        totalFreight: 250.00,
+        totalFreight: '250.00',
         pickupDate: '2024-03-25',
         pickupTime: '10:00 AM',
         departureTime: '2:00 PM',

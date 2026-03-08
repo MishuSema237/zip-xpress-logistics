@@ -54,7 +54,7 @@ export interface Shipment {
   product: string;
   productQuantity: number;
   paymentMode: string;
-  totalFreight: number;
+  totalFreight: string;
   weight: number;
 
   // Dates and Times

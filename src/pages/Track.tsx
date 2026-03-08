@@ -45,6 +45,7 @@ import {
 import AnimatedCard from '../components/animations/AnimatedCard';
 import ShipmentMap from '../components/ShipmentMap';
 import trustedParner from '../components/assets/parcelandPhone.jpg';
+import { formatFreight } from '../utils/formatUtils';
 
 const Track: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -477,7 +478,7 @@ const Track: React.FC = () => {
                 <div className={`text-sm uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Freight</div>
                 <div className={`flex items-center gap-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   <FaDollarSign className={`text-lg ${isDarkMode ? 'text-zip-red-600' : 'text-zip-blue-800'}`} />
-                  <span className="font-medium">${shipment.totalFreight}</span>
+                  <span className="font-medium">{formatFreight(shipment.totalFreight)}</span>
                 </div>
               </div>
               <div>

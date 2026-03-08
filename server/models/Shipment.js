@@ -56,7 +56,7 @@ const shipmentSchema = new mongoose.Schema({
     product: String,
     productQuantity: Number,
     paymentMode: String,
-    totalFreight: Number,
+    totalFreight: String,
     weight: Number,
 
     // Dates and Times

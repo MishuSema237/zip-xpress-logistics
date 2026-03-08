@@ -11,6 +11,15 @@ const getBaseStyles = () => `
   .label { font-weight: bold; color: #555; }
 `;
 
+const formatFreight = (freight) => {
+  if (!freight) return '0.00';
+  const s = freight.toString().trim();
+  const hasCurrencySymbol = /^[^0-9\s]/.test(s);
+  if (hasCurrencySymbol) return s;
+  if (/^-?\d*(\.\d+)?$/.test(s.replace(/,/g, ''))) return `$${s}`;
+  return s;
+};
+
 const getShipperTemplate = (data) => `
   <!DOCTYPE html>
   <html>
@@ -31,6 +40,7 @@ const getShipperTemplate = (data) => `
           <tr><td class="label">Status:</td><td>${data.status}</td></tr>
           <tr><td class="label">Origin:</td><td>${data.origin}</td></tr>
           <tr><td class="label">Destination:</td><td>${data.destination}</td></tr>
+          <tr><td class="label">Total Freight:</td><td>${formatFreight(data.totalFreight)}</td></tr>
         </table>
         
         <p>You can track your shipment at any time by clicking the button below:</p>
@@ -66,6 +76,7 @@ const getReceiverTemplate = (data) => `
         <table class="info-table">
           <tr><td class="label">Tracking Number:</td><td>${data.trackingNumber}</td></tr>
           <tr><td class="label">Expected Delivery:</td><td>${data.expectedDeliveryDate || 'Pending'}</td></tr>
+          <tr><td class="label">Total Freight:</td><td>${formatFreight(data.totalFreight)}</td></tr>
         </table>
         
         <p>You can track the progress of your package here:</p>
@@ -110,7 +121,7 @@ const getContactTemplate = (data) => `
 `;
 
 module.exports = {
-    getShipperTemplate,
-    getReceiverTemplate,
-    getContactTemplate
+  getShipperTemplate,
+  getReceiverTemplate,
+  getContactTemplate
 };

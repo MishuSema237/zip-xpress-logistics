@@ -48,7 +48,7 @@ type ShipmentFormData = {
   product: string;
   productQuantity: number;
   paymentMode: string;
-  totalFreight: number;
+  totalFreight: string;
   weight: number;
 
   // Dates and Times
@@ -91,7 +91,7 @@ const defaultShipmentForm: ShipmentFormData = {
   product: '',
   productQuantity: 1,
   paymentMode: '',
-  totalFreight: 0,
+  totalFreight: '',
   weight: 0,
   expectedDeliveryDate: '',
   departureTime: '',
@@ -212,7 +212,7 @@ const AdministrationAndDevelopment: React.FC = () => {
         product: 'Test Products',
         productQuantity: 5,
         paymentMode: 'Credit Card',
-        totalFreight: 250.00,
+        totalFreight: '250.00',
         weight: 15.5,
         expectedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         departureTime: '09:00',
@@ -386,6 +386,28 @@ const AdministrationAndDevelopment: React.FC = () => {
     setTrackingFormData({});
     setShowTrackingForm(false);
     setSelectedShipment(null);
+  };
+
+  const handleRemovePackage = (index: number, isEditForm: boolean = false) => {
+    if (isEditForm) {
+      if (!trackingFormData.packages && !selectedShipment) return;
+      const currentPackages = trackingFormData.packages || selectedShipment!.packages;
+      if (currentPackages.length <= 1) {
+        toast.error('At least one package is required');
+        return;
+      }
+      const newPackages = [...currentPackages];
+      newPackages.splice(index, 1);
+      setTrackingFormData({ ...trackingFormData, packages: newPackages });
+    } else {
+      if (shipmentFormData.packages.length <= 1) {
+        toast.error('At least one package is required');
+        return;
+      }
+      const newPackages = [...shipmentFormData.packages];
+      newPackages.splice(index, 1);
+      setShipmentFormData({ ...shipmentFormData, packages: newPackages });
+    }
   };
 
   const filteredShipments = shipments.filter((shipment) =>
@@ -838,10 +860,10 @@ const AdministrationAndDevelopment: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Total Freight</label>
                       <input
-                        type="number"
+                        type="text"
                         placeholder="Enter total freight cost"
                         value={shipmentFormData.totalFreight}
-                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, totalFreight: parseFloat(e.target.value) })}
+                        onChange={(e) => setShipmentFormData({ ...shipmentFormData, totalFreight: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         title="Enter the total shipping cost"
                         required
@@ -939,7 +961,17 @@ const AdministrationAndDevelopment: React.FC = () => {
                 <div>
                   <h3 className="text-lg font-medium mb-2">Package Details</h3>
                   {shipmentFormData.packages.map((pkg, index) => (
-                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 p-4 border rounded-md">
+                    <div key={index} className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 p-4 border rounded-md">
+                      {shipmentFormData.packages.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemovePackage(index, false)}
+                          className="absolute -top-2 -right-2 p-1 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors z-10"
+                          title="Remove Package"
+                        >
+                          <FaTrash size={12} />
+                        </button>
+                      )}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
                         <input
@@ -1289,9 +1321,9 @@ const AdministrationAndDevelopment: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Total Freight</label>
                       <input
-                        type="number"
-                        value={trackingFormData.totalFreight || selectedShipment.totalFreight}
-                        onChange={(e) => setTrackingFormData({ ...trackingFormData, totalFreight: parseFloat(e.target.value) })}
+                        type="text"
+                        value={trackingFormData.totalFreight !== undefined ? trackingFormData.totalFreight : (selectedShipment.totalFreight || '')}
+                        onChange={(e) => setTrackingFormData({ ...trackingFormData, totalFreight: e.target.value })}
                         className="w-full px-3 py-2 border rounded-md"
                         required
                       />
@@ -1403,7 +1435,17 @@ const AdministrationAndDevelopment: React.FC = () => {
                 <div>
                   <h3 className="text-lg font-medium mb-2">Package Details</h3>
                   {(trackingFormData.packages || selectedShipment.packages).map((pkg, index) => (
-                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 p-4 border rounded-md">
+                    <div key={index} className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 p-4 border rounded-md">
+                      {(trackingFormData.packages || selectedShipment.packages).length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemovePackage(index, true)}
+                          className="absolute -top-2 -right-2 p-1 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors z-10"
+                          title="Remove Package"
+                        >
+                          <FaTrash size={12} />
+                        </button>
+                      )}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
                         <input
