@@ -45,7 +45,7 @@ const getShipperTemplate = (data) => `
         
         <p>You can track your shipment at any time by clicking the button below:</p>
         <div style="text-align: center; margin: 20px 0;">
-          <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/track/${data.trackingNumber}" class="button">Track Shipment</a>
+          <a href="${process.env.FRONTEND_URL || 'https://zip-xpresslogistics.com'}/track/${data.trackingNumber}" class="button">Track Shipment</a>
         </div>
         
         <p>Thank you for choosing Zip Xpress!</p>
@@ -81,7 +81,7 @@ const getReceiverTemplate = (data) => `
         
         <p>You can track the progress of your package here:</p>
         <div style="text-align: center; margin: 20px 0;">
-          <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/track/${data.trackingNumber}" class="button">Track Package</a>
+          <a href="${process.env.FRONTEND_URL || 'https://zip-xpresslogistics.com'}/track/${data.trackingNumber}" class="button">Track Package</a>
         </div>
       </div>
       <div class="footer">
