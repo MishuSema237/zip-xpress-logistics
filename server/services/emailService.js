@@ -8,8 +8,8 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 // Initialize Nodemailer SMTP transporter
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.zoho.com",
-    port: parseInt(process.env.SMTP_PORT) || 465,
-    secure: parseInt(process.env.SMTP_PORT) === 465, // true for 465, false for 587
+    port: 465, // Explicitly use 465 for better reliability on cloud platforms
+    secure: true, // true for 465, false for 587
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s+/g, "").replace(/"/g, "") : "",
