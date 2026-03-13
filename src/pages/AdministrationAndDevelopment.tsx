@@ -1014,7 +1014,6 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setShipmentFormData({ ...shipmentFormData, packages: newPackages });
                           }}
                           className="w-full px-3 py-2 border rounded-md"
-                          required
                         />
                       </div>
                       <div>
@@ -1043,7 +1042,6 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setShipmentFormData({ ...shipmentFormData, packages: newPackages });
                           }}
                           className="w-full px-3 py-2 border rounded-md"
-                          required
                         />
                       </div>
                       <div>
@@ -1058,7 +1056,6 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setShipmentFormData({ ...shipmentFormData, packages: newPackages });
                           }}
                           className="w-full px-3 py-2 border rounded-md"
-                          required
                         />
                       </div>
                       <div>
@@ -1073,7 +1070,6 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setShipmentFormData({ ...shipmentFormData, packages: newPackages });
                           }}
                           className="w-full px-3 py-2 border rounded-md"
-                          required
                         />
                       </div>
                     </div>
@@ -1485,7 +1481,6 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setTrackingFormData({ ...trackingFormData, packages: newPackages });
                           }}
                           className="w-full px-3 py-2 border rounded-md"
-                          required
                         />
                       </div>
                       <div>
@@ -1513,7 +1508,6 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setTrackingFormData({ ...trackingFormData, packages: newPackages });
                           }}
                           className="w-full px-3 py-2 border rounded-md"
-                          required
                         />
                       </div>
                       <div>
@@ -1527,7 +1521,6 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setTrackingFormData({ ...trackingFormData, packages: newPackages });
                           }}
                           className="w-full px-3 py-2 border rounded-md"
-                          required
                         />
                       </div>
                       <div>
@@ -1541,7 +1534,6 @@ const AdministrationAndDevelopment: React.FC = () => {
                             setTrackingFormData({ ...trackingFormData, packages: newPackages });
                           }}
                           className="w-full px-3 py-2 border rounded-md"
-                          required
                         />
                       </div>
                     </div>

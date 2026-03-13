@@ -555,7 +555,6 @@ const Admin: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700">Length (cm)</label>
                     <input
                       type="number"
-                      required
                       value={length}
                       onChange={(e) => setLength(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -565,7 +564,6 @@ const Admin: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700">Width (cm)</label>
                     <input
                       type="number"
-                      required
                       value={width}
                       onChange={(e) => setWidth(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -575,7 +573,6 @@ const Admin: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700">Height (cm)</label>
                     <input
                       type="number"
-                      required
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -585,7 +582,6 @@ const Admin: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700">Weight (kg)</label>
                     <input
                       type="number"
-                      required
                       value={weight}
                       onChange={(e) => setWeight(e.target.value)}
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"

@@ -42,6 +42,36 @@ const getShipperTemplate = (data) => `
           <tr><td class="label">Destination:</td><td>${data.destination}</td></tr>
           <tr><td class="label">Total Freight:</td><td>${formatFreight(data.totalFreight)}</td></tr>
         </table>
+
+        ${data.packages && data.packages.length > 0 ? `
+          <h3>Package Details</h3>
+          <table class="info-table">
+            <thead>
+              <tr style="background-color: #f8f9fa;">
+                <td class="label">Qty</td>
+                <td class="label">Type</td>
+                <td class="label">Description</td>
+                ${data.packages.some(p => p.length && p.length !== 0) ? '<td class="label">Length</td>' : ''}
+                ${data.packages.some(p => p.width && p.width !== 0) ? '<td class="label">Width</td>' : ''}
+                ${data.packages.some(p => p.height && p.height !== 0) ? '<td class="label">Height</td>' : ''}
+                ${data.packages.some(p => p.weight && p.weight !== 0) ? '<td class="label">Weight</td>' : ''}
+              </tr>
+            </thead>
+            <tbody>
+              ${data.packages.map(pkg => `
+                <tr>
+                  <td>${pkg.quantity}</td>
+                  <td>${pkg.pieceType}</td>
+                  <td>${pkg.description}</td>
+                  ${data.packages.some(p => p.length && p.length !== 0) ? `<td>${pkg.length || '-'} cm</td>` : ''}
+                  ${data.packages.some(p => p.width && p.width !== 0) ? `<td>${pkg.width || '-'} cm</td>` : ''}
+                  ${data.packages.some(p => p.height && p.height !== 0) ? `<td>${pkg.height || '-'} cm</td>` : ''}
+                  ${data.packages.some(p => p.weight && p.weight !== 0) ? `<td>${pkg.weight || '-'} kg</td>` : ''}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        ` : ''}
         
         <p>You can track your shipment at any time by clicking the button below:</p>
         <div style="text-align: center; margin: 20px 0;">
@@ -78,6 +108,36 @@ const getReceiverTemplate = (data) => `
           <tr><td class="label">Expected Delivery:</td><td>${data.expectedDeliveryDate || 'Pending'}</td></tr>
           <tr><td class="label">Total Freight:</td><td>${formatFreight(data.totalFreight)}</td></tr>
         </table>
+
+        ${data.packages && data.packages.length > 0 ? `
+          <h3>Package Details</h3>
+          <table class="info-table">
+            <thead>
+              <tr style="background-color: #f8f9fa;">
+                <td class="label">Qty</td>
+                <td class="label">Type</td>
+                <td class="label">Description</td>
+                ${data.packages.some(p => p.length && p.length !== 0) ? '<td class="label">Length</td>' : ''}
+                ${data.packages.some(p => p.width && p.width !== 0) ? '<td class="label">Width</td>' : ''}
+                ${data.packages.some(p => p.height && p.height !== 0) ? '<td class="label">Height</td>' : ''}
+                ${data.packages.some(p => p.weight && p.weight !== 0) ? '<td class="label">Weight</td>' : ''}
+              </tr>
+            </thead>
+            <tbody>
+              ${data.packages.map(pkg => `
+                <tr>
+                  <td>${pkg.quantity}</td>
+                  <td>${pkg.pieceType}</td>
+                  <td>${pkg.description}</td>
+                  ${data.packages.some(p => p.length && p.length !== 0) ? `<td>${pkg.length || '-'} cm</td>` : ''}
+                  ${data.packages.some(p => p.width && p.width !== 0) ? `<td>${pkg.width || '-'} cm</td>` : ''}
+                  ${data.packages.some(p => p.height && p.height !== 0) ? `<td>${pkg.height || '-'} cm</td>` : ''}
+                  ${data.packages.some(p => p.weight && p.weight !== 0) ? `<td>${pkg.weight || '-'} kg</td>` : ''}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        ` : ''}
         
         <p>You can track the progress of your package here:</p>
         <div style="text-align: center; margin: 20px 0;">

@@ -518,17 +518,24 @@ const Track: React.FC = () => {
             : 'bg-white shadow-lg'
             }`}>
             <h2 className={`text-xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-zip-blue-800'}`}>Package Details</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            {(() => {
+              const showLength = shipment.packages.some(pkg => pkg.length && pkg.length !== 0);
+              const showWidth = shipment.packages.some(pkg => pkg.width && pkg.width !== 0);
+              const showHeight = shipment.packages.some(pkg => pkg.height && pkg.height !== 0);
+              const showWeight = shipment.packages.some(pkg => pkg.weight && pkg.weight !== 0);
+
+              return (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
                 <thead>
                   <tr className={`border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                     <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Qty.</th>
                     <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Piece Type</th>
                     <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Description</th>
-                    <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Length(cm)</th>
-                    <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Width(cm)</th>
-                    <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Height(cm)</th>
-                    <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Weight (kg)</th>
+                    {showLength && <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Length(cm)</th>}
+                    {showWidth && <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Width(cm)</th>}
+                    {showHeight && <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Height(cm)</th>}
+                    {showWeight && <th className={`py-3 px-4 text-left text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Weight (kg)</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -537,16 +544,18 @@ const Track: React.FC = () => {
                       <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.quantity}</td>
                       <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.pieceType}</td>
                       <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.description}</td>
-                      <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.length}</td>
-                      <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.width}</td>
-                      <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.height}</td>
-                      <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.weight}</td>
+                      {showLength && <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.length}</td>}
+                      {showWidth && <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.width}</td>}
+                      {showHeight && <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.height}</td>}
+                      {showWeight && <td className={`py-3 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{pkg.weight}</td>}
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
-          </div>
+                </table>
+              </div>
+            );
+          })()}
+        </div>
 
           {/* Contact Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
