@@ -50,7 +50,8 @@ const sendEmail = async (to, subject, html) => {
         if (resend) {
             console.log(`🔄 Attempting fallback to Resend for ${to}...`);
             try {
-                const resendFrom = "Zip Xpress <onboarding@resend.dev>";
+                // Use the configured FROM address if available, otherwise fallback to the user email
+                const resendFrom = process.env.SMTP_FROM || `"Zip Xpress" <${process.env.SMTP_USER}>`;
 
                 const response = await resend.emails.send({
                     from: resendFrom,
@@ -60,6 +61,10 @@ const sendEmail = async (to, subject, html) => {
                 });
 
                 if (response.error) {
+                    // Check if it's the "onboarding@resend.dev" error and provide advice if so
+                    if (response.error.message && response.error.message.includes('onboarding@resend.dev')) {
+                         console.error(`❌ Resend Error: It seems like Resend is still restricted. Ensure ${resendFrom} is part of your verified domain.`);
+                    }
                     console.error(`❌ Resend API Error for ${to}:`, response.error.message || response.error);
                     throw response.error;
                 }
