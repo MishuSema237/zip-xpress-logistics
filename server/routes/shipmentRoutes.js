@@ -46,8 +46,11 @@ router.post('/test-email', async (req, res) => {
         await sendShipmentCreatedEmail(shipment);
         res.json({ success: true, message: 'Test emails sent successfully' });
     } catch (error) {
-        console.error('Test email error:', error);
-        res.status(500).json({ message: 'Failed to send test emails' });
+        console.error('Test email error route:', error);
+        res.status(500).json({ 
+            message: 'Failed to send test emails',
+            error: error.message 
+        });
     }
 });
 

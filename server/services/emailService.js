@@ -18,6 +18,9 @@ const transporter = nodemailer.createTransport({
         rejectUnauthorized: false,
         minVersion: "TLSv1.2",
     },
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 5000,    // 5 seconds
+    socketTimeout: 15000,     // 15 seconds
 });
 
 const sendEmail = async (to, subject, html) => {
@@ -35,38 +38,41 @@ const sendEmail = async (to, subject, html) => {
         console.log(`✅ Email sent via SMTP to ${to}. MessageId: ${info.messageId}`);
         return info;
     } catch (smtpError) {
-        console.error(`❌ SMTP Error for ${to}:`, smtpError.message);
+        console.error(`❌ SMTP Error details for ${to}:`, {
+            message: smtpError.message,
+            code: smtpError.code,
+            command: smtpError.command,
+            response: smtpError.response,
+            stack: smtpError.stack
+        });
 
         // 2. Fallback to Resend
         if (resend) {
             console.log(`🔄 Attempting fallback to Resend for ${to}...`);
             try {
-                // Use onboarding@resend.dev as a secondary fallback if the primary "from" fails
-                // This is necessary because Resend requires domain verification for custom addresses.
                 const resendFrom = "Zip Xpress <onboarding@resend.dev>";
 
-                const { data, error } = await resend.emails.send({
+                const response = await resend.emails.send({
                     from: resendFrom,
                     to,
                     subject,
                     html,
                 });
 
-                if (error) {
-                    console.error(`❌ Resend API Error for ${to}:`, error.message || error);
-                    throw error;
+                if (response.error) {
+                    console.error(`❌ Resend API Error for ${to}:`, response.error.message || response.error);
+                    throw response.error;
                 }
 
-                console.log(`✅ Email sent via Resend fallback to ${to}. ID: ${data.id}`);
-                return data;
+                console.log(`✅ Email sent via Resend fallback to ${to}. ID: ${response.data.id}`);
+                return response.data;
             } catch (resendError) {
                 console.error(`❌ Resend Fallback failed for ${to}:`, resendError.message || resendError);
-                // If everything fails, throw the original SMTP error to the controller
                 throw new Error(`Email failed (SMTP & Resend). SMTP: ${smtpError.message}, Resend: ${resendError.message}`);
             }
         }
 
-        throw smtpError;
+        throw new Error(`SMTP Error: ${smtpError.message}${smtpError.code ? ` (${smtpError.code})` : ''}`);
     }
 };
 
